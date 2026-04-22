@@ -1,0 +1,2021 @@
+ingestor.py
+Python
+Primo file ottenuto ti allego a seguito il messaggio di output di claude. analizza e dammi un opinione, dopodiche spiegami come testarlo e provarlo .Reconciliato architettura esistente con nuove direttive operative sequenziali 
+Reconciliato architettura esistente con nuove direttive operative sequenziali
+The user wants me to read two uploaded files before proceeding. Let me check what's been uploaded.
+
+
+Check uploaded files
+
+Read Prompt_List.md
+Now let me read the companion document.
+
+
+Read COmpanion_Prompt_List.md
+Now I have a clear picture. The user has two documents:
+
+Prompt_List.md — A sequenced code generation plan (Prompt Controller) with 11 prompts and 7 steps. These are the prompts that define what modules to generate.
+COmpanion_Prompt_List.md — A companion/design document that explains the conceptual and architectural context.
+The user says to "operate according to these 2 new attachments" where:
+
+The Prompt_List is the operational guide (what to generate, in what order)
+The Companion is the support/context document
+Now, crucially: we already have a fully working SIGNUM SENTINEL codebase from the previous session. The Prompt Controller defines a clean, structured 7-step generation plan with specific module names that are slightly different from what we already have.
+
+Key differences between existing codebase and the Prompt List's plan:
+
+Existing modules (core/):
+
+ingestor.py ✓
+naming_intelligence.py ✓
+metadata_extractor.py ✓
+physics_oracle.py ✓
+physics_validator.py ✓
+normalizer.py ✓
+cross_map_analyzer.py ✓
+decision_layer.py ✓
+dataset_builder.py ✓
+asset_parser.py
+variant_generator.py
+AI modules (ai/):
+
+ai_analyzer.py ✓
+pid_generator.py ✓
+New modules from Prompt List:
+
+validator.py (Prompt 5) — this is a simpler version of physics_validator, focused on completeness/consistency
+damage_detector.py (Prompt 8) — NEW, not in existing codebase
+pid_mask_generator.py (Prompt 9) — equivalent to pid_generator.py but with different signature
+comparator.py (Prompt 10) — NEW, not in existing codebase
+The Prompt Controller says:
+
+Work sequentially
+Only 1-2 modules per step
+Wait for user confirmation before next step
+Never summarize, only produce real code
+Since the user says "Basati su tutto il ragionamento fatto fino ad ora ma opera secondo questi 2 nuovi allegati" — this means I should:
+
+Use the existing codebase as context/foundation
+Follow the Prompt Controller's step-by-step rules
+…
+Mostra altro
+Fatto
+Documenti letti e compresi. Ecco l'analisi della situazione prima di eseguire:
+
+Cosa ho: codebase SIGNUM SENTINEL già funzionante (17 moduli, pipeline Phase 1-3 integrata, testata end-to-end).
+
+Cosa dicono i nuovi allegati:
+
+Prompt Controller → regole di esecuzione sequenziale strette: 1-2 moduli alla volta, stop, aspetta conferma
+Companion → amplia l'architettura con process.json (tracciamento pipeline), material_info.json (descrittore custom), guided mode per materiali custom
+Approccio: genero le versioni v2 dei moduli — più ricche, incorporate con le conoscenze del Companion — compatibili con l'architettura SIGNUM SENTINEL esistente. Non riscrivo da zero: evolvo.
+
+STEP 1 — ingestor.py
+Versione evoluta: aggiunge lettura process.json + material_info.json, guided mode stub, data lineage per ogni file.
+
+
+File visualizzato, file creato, eseguito un comando
+File visualizzato, file creato, eseguito un comando
+STEP 1 — COMPLETATO ✓
+
+ingestor.py v2 — 560 righe, zero placeholder, syntax OK.
+
+Rispetto alla versione base del Prompt 1, incorpora tutto il ragionamento del Companion:
+
+Feature	Prompt base	v2 (questo)
+Scan ricorsivo + grouping	✓	✓
+Struttura MaterialSet / Variant	✓	✓
+Lettura process.json	✗	✓ data lineage completa
+Lettura material_info.json	✗	✓ category, scale, variants
+source_type (original/generated/variant)	✗	✓ per ogni FileRecord
+DVA ID compatibile SIGNUM SENTINEL	✗	✓
+Provider mapping (QXL, POL, ACG…)	parziale	✓ esteso
+Main test con struttura di prova	✓	✓ con Pillow + process.json
+aspetta ho la cartellaC:\Users\Carmine\Desktop\test_dvamocles dove dentro ho la cartella test_asset e ingestor.py. in test asset ho la foulder ambient cg. con dento una cartella chiamata tiles 138 (material set) e un png che identifica gli standar di ambient cg (Method
+
+Description
+
+Example
+
+Approximated
+
+The material has been approximated from just a color map.
+
+Photogrammetry
+
+The material's displacement map was created using
+photogrammetry.
+
+Procedural
+
+The material was created fully procedurally - usually in Adobe
+Substance 3D Designer.) in tiles 138 ho una serie di cartelle (      Tiles138_1K-JPG
+
+               Tiles138_1K-PNG
+
+                Tiles138_2K-JPG
+
+               Tiles138_2K-PNG
+
+              Tiles138_4K-JPG
+
+                Tiles138_4K-PNG
+
+             Tiles138_8K-JPG
+
+             Tiles138_8K-PNG
+
+              Zip File
+
+         39933 DVAM_Tiles_138_INFO_SiteSpecs.png) ogniuna ha il set completo di texture nella risoluzione/formato del nome della cartella zip file è una cartella che racchiude tutte le cartelle prima menzionate ma in zip 39933 dvam ... e uno screenshot sul sito che da info extra sul materiale (Tiles 138
+
+PBR Maps (USDZ-compatible)
++ 1K-JPG.zip
+
+6 MB
+
+1K-PNG.zip
+
+15 MB
+
++ 2K-JPG.zip
+
+22 MB
+
+± 2K-PNG.zip
+
+57 MB
+
+± 4K-JPG.zip
+
+95 MB
+
+4K-PNG.zip
+
+223 MB
+
+± 8K-JPG.zip
+
+411 MB
+
+± 8K-PNG.zip
+
+871 MB
+
+Tags
+
+Shortlink
+
+Black Square Stone Tiles
+
+https://ambientcg.com/a/Tiles138
+
+Downloads
+
+Release Date
+
+13 271 (466 Last Week)
+
+2025-11-01
+
+Technique
+Surface Photogrammetry
+
+Share feedback & suggestions ...
+
+Submit) contenuto tipo della cartella prendendo come esempio la 1k jpg (    Directory: C:\Users\Carmine\Desktop\test_dvamocles\test_assets\Ambient CG\Tiles 138\Tiles138_1K-JPG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:52         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_1K-JPG.blend
+------        08/10/2025     00:59           2257 Tiles138_1K-JPG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_1K-JPG.tres
+------        08/10/2025     01:00           2979 Tiles138_1K-JPG.usdc
+------        08/10/2025     00:44         390536 Tiles138_1K-JPG_AmbientOcclusion.jpg
+------        08/10/2025     00:47        1098452 Tiles138_1K-JPG_Color.jpg
+------        08/10/2025     00:45         328963 Tiles138_1K-JPG_Displacement.jpg
+------        08/10/2025     00:47        1132761 Tiles138_1K-JPG_NormalDX.jpg
+------        08/10/2025     00:46        1133507 Tiles138_1K-JPG_NormalGL.jpg
+------        08/10/2025     00:48         579244 Tiles138_1K-JPG_Roughness.jpg )
+no file random PS C:\Users\Carmine\Desktop> cd C:\Users\Carmine\Desktop\test_dvamocles
+PS C:\Users\Carmine\Desktop\test_dvamocles> python ingestor.py
+No path given. Creating test structure...
+Test structure created at ./test_archive
+2026-04-21 19:02:21,475 [sentinel.ingestor   ] INFO Ingestor v2: scanning test_archive
+2026-04-21 19:02:21,476 [sentinel.ingestor   ] INFO Ingestor: 1 material folders found
+2026-04-21 19:02:21,478 [sentinel.ingestor   ] INFO   process.json loaded: 1 pipeline entries
+2026-04-21 19:02:21,494 [sentinel.ingestor   ] INFO Ingestor: 1 material sets built
+
+============================================================
+INGESTOR v2 — SCAN SUMMARY
+============================================================
+  Materials found   : 1
+  Total files       : 3
+  Providers         : Quixel
+  Resolutions found : 4K
+
+  [QXL] Rock_Granite
+    ↳ process.json: 1 pipeline steps
+    Variant 4K: 3 files (1 generated)
+      Rock_Granite_4K_BC.png
+      Rock_Granite_4K_N.png ← albedo_to_normal (Materialize)
+      Rock_Granite_4K_R.png
+============================================================
+DVA IDs generated:
+  DVA_QXL_Rock_Granite
+============================================================
+PS C:\Users\Carmine\Desktop\test_dvamocles> python ingestor.py "C:\Users\Carmine\Desktop\test_dvamocles\test_assets"
+2026-04-21 19:03:24,163 [sentinel.ingestor   ] INFO Ingestor v2: scanning C:\Users\Carmine\Desktop\test_dvamocles\test_assets
+2026-04-21 19:03:24,172 [sentinel.ingestor   ] INFO Ingestor: 10 material folders found
+2026-04-21 19:03:24,284 [sentinel.ingestor   ] INFO Ingestor: 10 material sets built
+
+============================================================
+INGESTOR v2 — SCAN SUMMARY
+============================================================
+  Materials found   : 10
+  Total files       : 171
+  Providers         : Ambient Cg, Unknown
+  Resolutions found : 1K, 2K, 4K, 512, 8K
+
+  [UNK] Ambient_CG
+    Variant 1K: 12 files
+      Tiles138_1K-JPG_AmbientOcclusion.jpg
+      Tiles138_1K-JPG_Color.jpg
+      Tiles138_1K-JPG_Displacement.jpg
+      Tiles138_1K-JPG_NormalDX.jpg
+      Tiles138_1K-JPG_NormalGL.jpg
+      Tiles138_1K-JPG_Roughness.jpg
+      Tiles138_1K-PNG_AmbientOcclusion.png
+      Tiles138_1K-PNG_Color.png
+      Tiles138_1K-PNG_Displacement.png
+      Tiles138_1K-PNG_NormalDX.png
+      Tiles138_1K-PNG_NormalGL.png
+      Tiles138_1K-PNG_Roughness.png
+    Variant 2K: 12 files
+      Tiles138_2K-JPG_AmbientOcclusion.jpg
+      Tiles138_2K-JPG_Color.jpg
+      Tiles138_2K-JPG_Displacement.jpg
+      Tiles138_2K-JPG_NormalDX.jpg
+      Tiles138_2K-JPG_NormalGL.jpg
+      Tiles138_2K-JPG_Roughness.jpg
+      Tiles138_2K-PNG_AmbientOcclusion.png
+      Tiles138_2K-PNG_Color.png
+      Tiles138_2K-PNG_Displacement.png
+      Tiles138_2K-PNG_NormalDX.png
+      Tiles138_2K-PNG_NormalGL.png
+      Tiles138_2K-PNG_Roughness.png
+    Variant 4K: 12 files
+      Tiles138_4K-JPG_AmbientOcclusion.jpg
+      Tiles138_4K-JPG_Color.jpg
+      Tiles138_4K-JPG_Displacement.jpg
+      Tiles138_4K-JPG_NormalDX.jpg
+      Tiles138_4K-JPG_NormalGL.jpg
+      Tiles138_4K-JPG_Roughness.jpg
+      Tiles138_4K-PNG_AmbientOcclusion.png
+      Tiles138_4K-PNG_Color.png
+      Tiles138_4K-PNG_Displacement.png
+      Tiles138_4K-PNG_NormalDX.png
+      Tiles138_4K-PNG_NormalGL.png
+      Tiles138_4K-PNG_Roughness.png
+    Variant 512: 10 files
+      Immagine 2026-04-17 001316.png
+      DVAM_Tiles_138_INFO_SiteSpecs.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+    Variant 8K: 12 files
+      Tiles138_8K-JPG_AmbientOcclusion.jpg
+      Tiles138_8K-JPG_Color.jpg
+      Tiles138_8K-JPG_Displacement.jpg
+      Tiles138_8K-JPG_NormalDX.jpg
+      Tiles138_8K-JPG_NormalGL.jpg
+      Tiles138_8K-JPG_Roughness.jpg
+      Tiles138_8K-PNG_AmbientOcclusion.png
+      Tiles138_8K-PNG_Color.png
+      Tiles138_8K-PNG_Displacement.png
+      Tiles138_8K-PNG_NormalDX.png
+      Tiles138_8K-PNG_NormalGL.png
+      Tiles138_8K-PNG_Roughness.png
+  [AMB] Tiles_138
+    Variant 1K: 12 files
+      Tiles138_1K-JPG_AmbientOcclusion.jpg
+      Tiles138_1K-JPG_Color.jpg
+      Tiles138_1K-JPG_Displacement.jpg
+      Tiles138_1K-JPG_NormalDX.jpg
+      Tiles138_1K-JPG_NormalGL.jpg
+      Tiles138_1K-JPG_Roughness.jpg
+      Tiles138_1K-PNG_AmbientOcclusion.png
+      Tiles138_1K-PNG_Color.png
+      Tiles138_1K-PNG_Displacement.png
+      Tiles138_1K-PNG_NormalDX.png
+      Tiles138_1K-PNG_NormalGL.png
+      Tiles138_1K-PNG_Roughness.png
+    Variant 2K: 12 files
+      Tiles138_2K-JPG_AmbientOcclusion.jpg
+      Tiles138_2K-JPG_Color.jpg
+      Tiles138_2K-JPG_Displacement.jpg
+      Tiles138_2K-JPG_NormalDX.jpg
+      Tiles138_2K-JPG_NormalGL.jpg
+      Tiles138_2K-JPG_Roughness.jpg
+      Tiles138_2K-PNG_AmbientOcclusion.png
+      Tiles138_2K-PNG_Color.png
+      Tiles138_2K-PNG_Displacement.png
+      Tiles138_2K-PNG_NormalDX.png
+      Tiles138_2K-PNG_NormalGL.png
+      Tiles138_2K-PNG_Roughness.png
+    Variant 4K: 12 files
+      Tiles138_4K-JPG_AmbientOcclusion.jpg
+      Tiles138_4K-JPG_Color.jpg
+      Tiles138_4K-JPG_Displacement.jpg
+      Tiles138_4K-JPG_NormalDX.jpg
+      Tiles138_4K-JPG_NormalGL.jpg
+      Tiles138_4K-JPG_Roughness.jpg
+      Tiles138_4K-PNG_AmbientOcclusion.png
+      Tiles138_4K-PNG_Color.png
+      Tiles138_4K-PNG_Displacement.png
+      Tiles138_4K-PNG_NormalDX.png
+      Tiles138_4K-PNG_NormalGL.png
+      Tiles138_4K-PNG_Roughness.png
+    Variant 512: 9 files
+      DVAM_Tiles_138_INFO_SiteSpecs.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+      Tiles138.png
+    Variant 8K: 12 files
+      Tiles138_8K-JPG_AmbientOcclusion.jpg
+      Tiles138_8K-JPG_Color.jpg
+      Tiles138_8K-JPG_Displacement.jpg
+      Tiles138_8K-JPG_NormalDX.jpg
+      Tiles138_8K-JPG_NormalGL.jpg
+      Tiles138_8K-JPG_Roughness.jpg
+      Tiles138_8K-PNG_AmbientOcclusion.png
+      Tiles138_8K-PNG_Color.png
+      Tiles138_8K-PNG_Displacement.png
+      Tiles138_8K-PNG_NormalDX.png
+      Tiles138_8K-PNG_NormalGL.png
+      Tiles138_8K-PNG_Roughness.png
+  [AMB] Tiles138_1K-JPG
+    Variant 1K: 6 files
+      Tiles138_1K-JPG_AmbientOcclusion.jpg
+      Tiles138_1K-JPG_Color.jpg
+      Tiles138_1K-JPG_Displacement.jpg
+      Tiles138_1K-JPG_NormalDX.jpg
+      Tiles138_1K-JPG_NormalGL.jpg
+      Tiles138_1K-JPG_Roughness.jpg
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_1K-PNG
+    Variant 1K: 6 files
+      Tiles138_1K-PNG_AmbientOcclusion.png
+      Tiles138_1K-PNG_Color.png
+      Tiles138_1K-PNG_Displacement.png
+      Tiles138_1K-PNG_NormalDX.png
+      Tiles138_1K-PNG_NormalGL.png
+      Tiles138_1K-PNG_Roughness.png
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_2K-JPG
+    Variant 2K: 6 files
+      Tiles138_2K-JPG_AmbientOcclusion.jpg
+      Tiles138_2K-JPG_Color.jpg
+      Tiles138_2K-JPG_Displacement.jpg
+      Tiles138_2K-JPG_NormalDX.jpg
+      Tiles138_2K-JPG_NormalGL.jpg
+      Tiles138_2K-JPG_Roughness.jpg
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_2K-PNG
+    Variant 2K: 6 files
+      Tiles138_2K-PNG_AmbientOcclusion.png
+      Tiles138_2K-PNG_Color.png
+      Tiles138_2K-PNG_Displacement.png
+      Tiles138_2K-PNG_NormalDX.png
+      Tiles138_2K-PNG_NormalGL.png
+      Tiles138_2K-PNG_Roughness.png
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_4K-JPG
+    Variant 4K: 6 files
+      Tiles138_4K-JPG_AmbientOcclusion.jpg
+      Tiles138_4K-JPG_Color.jpg
+      Tiles138_4K-JPG_Displacement.jpg
+      Tiles138_4K-JPG_NormalDX.jpg
+      Tiles138_4K-JPG_NormalGL.jpg
+      Tiles138_4K-JPG_Roughness.jpg
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_4K-PNG
+    Variant 4K: 6 files
+      Tiles138_4K-PNG_AmbientOcclusion.png
+      Tiles138_4K-PNG_Color.png
+      Tiles138_4K-PNG_Displacement.png
+      Tiles138_4K-PNG_NormalDX.png
+      Tiles138_4K-PNG_NormalGL.png
+      Tiles138_4K-PNG_Roughness.png
+    Variant 512: 1 files
+      Tiles138.png
+  [AMB] Tiles138_8K-JPG
+    Variant 512: 1 files
+      Tiles138.png
+    Variant 8K: 6 files
+      Tiles138_8K-JPG_AmbientOcclusion.jpg
+      Tiles138_8K-JPG_Color.jpg
+      Tiles138_8K-JPG_Displacement.jpg
+      Tiles138_8K-JPG_NormalDX.jpg
+      Tiles138_8K-JPG_NormalGL.jpg
+      Tiles138_8K-JPG_Roughness.jpg
+  [AMB] Tiles138_8K-PNG
+    Variant 512: 1 files
+      Tiles138.png
+    Variant 8K: 6 files
+      Tiles138_8K-PNG_AmbientOcclusion.png
+      Tiles138_8K-PNG_Color.png
+      Tiles138_8K-PNG_Displacement.png
+      Tiles138_8K-PNG_NormalDX.png
+      Tiles138_8K-PNG_NormalGL.png
+      Tiles138_8K-PNG_Roughness.png
+============================================================
+DVA IDs generated:
+  DVA_UNK_Ambient_CG
+  DVA_AMB_Tiles_138
+  DVA_AMB_Tiles138_1K-JPG
+  DVA_AMB_Tiles138_1K-PNG
+  DVA_AMB_Tiles138_2K-JPG
+  DVA_AMB_Tiles138_2K-PNG
+  DVA_AMB_Tiles138_4K-JPG
+  DVA_AMB_Tiles138_4K-PNG
+  DVA_AMB_Tiles138_8K-JPG
+  DVA_AMB_Tiles138_8K-PNG
+============================================================
+PS C:\Users\Carmine\Desktop\test_dvamocles>
+Aspetta prima di dare il prompt allora facciamo le varie cartelle e tutto in modo definitivo che ne dici? Nomi dove mettere cosa ….
+ Fammi proprio lo schema dalla prima cartella che contiene anche l’investitore e tutto da 0 proprio 
+PS C:\Users\Carmine\Desktop\DVAMOCLES> ls -R
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        21/04/2026     19:18                01_RAW_ARCHIVE
+d-----        21/04/2026     19:16                02_CUSTOM
+d-----        21/04/2026     19:16                03_PROCESSED
+d-----        21/04/2026     19:17                04_DATASET
+d-----        21/04/2026     19:17                05_OUTPUT
+d-----        21/04/2026     19:15                ai
+d-----        21/04/2026     19:16                config
+d-----        21/04/2026     19:17                core
+d-----        21/04/2026     19:17                logs
+d-----        21/04/2026     19:16                oracle
+d-----        21/04/2026     19:17                temp
+d-----        21/04/2026     19:16                utils
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        21/04/2026     19:18                Tiles 138
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        17/04/2026     01:16                Tiles138_1K-JPG
+d-----        17/04/2026     00:14                Tiles138_1K-PNG
+d-----        17/04/2026     00:14                Tiles138_2K-JPG
+d-----        17/04/2026     00:14                Tiles138_2K-PNG
+d-----        17/04/2026     00:14                Tiles138_4K-JPG
+d-----        17/04/2026     00:14                Tiles138_4K-PNG
+d-----        17/04/2026     00:14                Tiles138_8K-JPG
+d-----        17/04/2026     00:14                Tiles138_8K-PNG
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_1K-JPG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:52         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_1K-JPG.blend
+------        08/10/2025     00:59           2257 Tiles138_1K-JPG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_1K-JPG.tres
+------        08/10/2025     01:00           2979 Tiles138_1K-JPG.usdc
+------        08/10/2025     00:44         390536 Tiles138_1K-JPG_AmbientOcclusion.jpg
+------        08/10/2025     00:47        1098452 Tiles138_1K-JPG_Color.jpg
+------        08/10/2025     00:45         328963 Tiles138_1K-JPG_Displacement.jpg
+------        08/10/2025     00:47        1132761 Tiles138_1K-JPG_NormalDX.jpg
+------        08/10/2025     00:46        1133507 Tiles138_1K-JPG_NormalGL.jpg
+------        08/10/2025     00:48         579244 Tiles138_1K-JPG_Roughness.jpg
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_1K-PNG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:51         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_1K-PNG.blend
+------        08/10/2025     00:59           2257 Tiles138_1K-PNG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_1K-PNG.tres
+------        08/10/2025     01:00           2982 Tiles138_1K-PNG.usdc
+------        08/10/2025     00:50         365756 Tiles138_1K-PNG_AmbientOcclusion.png
+------        08/10/2025     00:52        1695723 Tiles138_1K-PNG_Color.png
+------        08/10/2025     00:53        1516993 Tiles138_1K-PNG_Displacement.png
+------        08/10/2025     00:55        4836443 Tiles138_1K-PNG_NormalDX.png
+------        08/10/2025     00:51        4836548 Tiles138_1K-PNG_NormalGL.png
+------        08/10/2025     00:51         555715 Tiles138_1K-PNG_Roughness.png
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_2K-JPG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:53         330803 Tiles138.png
+------        08/10/2025     00:59        1109220 Tiles138_2K-JPG.blend
+------        08/10/2025     00:59           2257 Tiles138_2K-JPG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_2K-JPG.tres
+------        08/10/2025     01:00           2979 Tiles138_2K-JPG.usdc
+------        08/10/2025     00:48        1787988 Tiles138_2K-JPG_AmbientOcclusion.jpg
+------        08/10/2025     00:44        4632723 Tiles138_2K-JPG_Color.jpg
+------        08/10/2025     00:44        1225165 Tiles138_2K-JPG_Displacement.jpg
+------        08/10/2025     00:47        5694025 Tiles138_2K-JPG_NormalDX.jpg
+------        08/10/2025     00:48        5694390 Tiles138_2K-JPG_NormalGL.jpg
+------        08/10/2025     00:47        2494311 Tiles138_2K-JPG_Roughness.jpg
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_2K-PNG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:52         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_2K-PNG.blend
+------        08/10/2025     00:59           2257 Tiles138_2K-PNG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_2K-PNG.tres
+------        08/10/2025     01:00           2982 Tiles138_2K-PNG.usdc
+------        08/10/2025     00:54        1770531 Tiles138_2K-PNG_AmbientOcclusion.png
+------        08/10/2025     00:54        7381138 Tiles138_2K-PNG_Color.png
+------        08/10/2025     00:50        5997630 Tiles138_2K-PNG_Displacement.png
+------        08/10/2025     00:51       20482554 Tiles138_2K-PNG_NormalDX.png
+------        08/10/2025     00:54       20482612 Tiles138_2K-PNG_NormalGL.png
+------        08/10/2025     00:52        2378135 Tiles138_2K-PNG_Roughness.png
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_4K-JPG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:54         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_4K-JPG.blend
+------        08/10/2025     00:59           2257 Tiles138_4K-JPG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_4K-JPG.tres
+------        08/10/2025     01:00           2979 Tiles138_4K-JPG.usdc
+------        08/10/2025     00:46        8177247 Tiles138_4K-JPG_AmbientOcclusion.jpg
+------        08/10/2025     00:47       18845782 Tiles138_4K-JPG_Color.jpg
+------        08/10/2025     00:45        4689753 Tiles138_4K-JPG_Displacement.jpg
+------        08/10/2025     00:44       27779199 Tiles138_4K-JPG_NormalDX.jpg
+------        08/10/2025     00:47       27694182 Tiles138_4K-JPG_NormalGL.jpg
+------        08/10/2025     00:44       10568968 Tiles138_4K-JPG_Roughness.jpg
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_4K-PNG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:53         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_4K-PNG.blend
+------        08/10/2025     00:59           2257 Tiles138_4K-PNG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_4K-PNG.tres
+------        08/10/2025     01:00           2982 Tiles138_4K-PNG.usdc
+------        08/10/2025     00:53        7388937 Tiles138_4K-PNG_AmbientOcclusion.png
+------        08/10/2025     00:50       29621970 Tiles138_4K-PNG_Color.png
+------        08/10/2025     00:52       22768876 Tiles138_4K-PNG_Displacement.png
+------        08/10/2025     00:52       81129626 Tiles138_4K-PNG_NormalDX.png
+------        08/10/2025     00:52       81128172 Tiles138_4K-PNG_NormalGL.png
+------        08/10/2025     00:53        9979671 Tiles138_4K-PNG_Roughness.png
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_8K-JPG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:52         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_8K-JPG.blend
+------        08/10/2025     00:59           2257 Tiles138_8K-JPG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_8K-JPG.tres
+------        08/10/2025     01:00           2979 Tiles138_8K-JPG.usdc
+------        08/10/2025     00:48       32807913 Tiles138_8K-JPG_AmbientOcclusion.jpg
+------        08/10/2025     00:47       77275988 Tiles138_8K-JPG_Color.jpg
+------        08/10/2025     00:46       16506973 Tiles138_8K-JPG_Displacement.jpg
+------        08/10/2025     00:49      130554382 Tiles138_8K-JPG_NormalDX.jpg
+------        08/10/2025     00:49      129749636 Tiles138_8K-JPG_NormalGL.jpg
+------        08/10/2025     00:45       42863360 Tiles138_8K-JPG_Roughness.jpg
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\01_RAW_ARCHIVE\Tiles 138\Tiles138_8K-PNG
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+------        08/10/2025     00:53         330803 Tiles138.png
+------        08/10/2025     01:00        1109220 Tiles138_8K-PNG.blend
+------        08/10/2025     00:59           2257 Tiles138_8K-PNG.mtlx
+------        08/10/2025     00:59           1015 Tiles138_8K-PNG.tres
+------        08/10/2025     01:00           2982 Tiles138_8K-PNG.usdc
+------        08/10/2025     00:52       28034212 Tiles138_8K-PNG_AmbientOcclusion.png
+------        08/10/2025     00:52      120505276 Tiles138_8K-PNG_Color.png
+------        08/10/2025     00:53       83967717 Tiles138_8K-PNG_Displacement.png
+------        08/10/2025     00:55      320029468 Tiles138_8K-PNG_NormalDX.png
+------        08/10/2025     00:56      320030038 Tiles138_8K-PNG_NormalGL.png
+------        08/10/2025     00:52       39493298 Tiles138_8K-PNG_Roughness.png
+
+
+    Directory: C:\Users\Carmine\Desktop\DVAMOCLES\core
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        21/04/2026     18:47          25700 ingestor.py
+OK ORA A QUESTO PUNTO GENERIAMO IL PROMPT PER IL FIX DELL INGESTOR.PY E DIAMO LA CONFORMAZIONE E LA DIRETTIVA DELLE VARIE CARTELLE E DIRECTORY CHE ABBIAMO COSI DA LAVORARE USANDO LA NOSTRA BASE
+FAI ANCHE IL PROMPT CHE COMUNICA TUTTA LA STRUTTURA PER FAR SI CHE ANCHE I PROSSIMI MODULI SA DOVE LI METTERO E CHE FOLDER DEVONO APRIRE E FARE O OGNI FOLDER CHE FA
+ingestor.py
+Python
+metadata_extractor.py
+Python
+rifatto ingestor e generato anche metadata extracror e naming intelligence, dove li metto in che cartelle e come li faccio partire
+PS C:\Users\Carmine\Desktop\DVAMOCLES> python core/metadata_extractor.py "01_RAW_ARCHIVE"
+
+========================================================================
+METADATA EXTRACTOR v2.0
+========================================================================
+2026-04-21 23:49:23,740 [sentinel.metadata     ] INFO ExifTool not found — using Pillow fallback
+
+  File   : 01_RAW_ARCHIVE
+  Size   : 0 bytes
+  Format :
+  Bits   : 0-bit
+  Mode   :
+  Space  : Unknown
+  Alpha  : False
+  ERROR  : Pillow error: [Errno 13] Permission denied: '01_RAW_ARCHIVE'
+  Method : Pillow niente e poi mi sa che prende i metadata dalle cartelle e tutto non  dai file giusto? e poi pillow lo devo scaricare?
+import os
+from PIL import Image
+
+VALID_EXT = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr"]
+
+def extract_metadata(file_path):
+    try:
+        with Image.open(file_path) as img:
+            return {
+                "path": file_path,
+                "resolution": img.size,
+                "mode": img.mode,
+                "format": img.format
+            }
+    except Exception as e:
+        return {
+            "path": file_path,
+            "error": str(e)
+        }
+
+def run_metadata_extractor(base_path):
+    results = []
+
+    for root, _, files in os.walk(base_path):
+        for f in files:
+            ext = os.path.splitext(f)[1].lower()
+            if ext in VALID_EXT:
+                full_path = os.path.join(root, f)
+                results.append(extract_metadata(full_path))
+
+    return results
+
+
+if __name__ == "__main__":
+    data = run_metadata_extractor("01_RAW_ARCHIVE")
+    print(f"Extracted metadata for {len(data)} files")
+integriamo exiftool (e nei tipi di metadati selezioniamo all) poi facciamo a b c 
+exiftool.exe se lo metto sempre in una delle cartelle dvamocles core ai ....
+import os
+import json
+import subprocess
+from PIL import Image
+
+VALID_EXT = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr"]
+
+IGNORE_KEYWORDS = ["preview", "thumbnail", "icon", "screenshot"]
+
+# -------------------------
+# FILTER
+# -------------------------
+def is_valid_texture(filename):
+    name = filename.lower()
+    return not any(k in name for k in IGNORE_KEYWORDS)
+
+# -------------------------
+# EXIFTOOL
+# -------------------------
+def extract_with_exiftool(file_path):
+    try:
+        result = subprocess.run(
+            ["exiftool", "-j", file_path],
+            capture_output=True,
+            text=True
+        )
+
+        data = json.loads(result.stdout)[0]
+
+        return {
+            "path": file_path,
+            "name": os.path.basename(file_path),
+
+            "metadata_raw": data,  # TUTTO
+
+            "file_size_kb": round(os.path.getsize(file_path) / 1024, 2),
+            "source": "exiftool"
+        }
+
+    except Exception as e:
+        return None
+
+# -------------------------
+# PILLOW FALLBACK
+# -------------------------
+def extract_with_pillow(file_path):
+    try:
+        with Image.open(file_path) as img:
+            return {
+                "path": file_path,
+                "name": os.path.basename(file_path),
+
+                "resolution": {
+                    "width": img.width,
+                    "height": img.height
+                },
+
+                "mode": img.mode,
+                "format": img.format,
+
+                "channels": len(img.getbands()),
+                "has_alpha": "A" in img.getbands(),
+
+                "file_size_kb": round(os.path.getsize(file_path) / 1024, 2),
+
+                "source": "pillow"
+            }
+
+    except Exception as e:
+        return {
+            "path": file_path,
+            "error": str(e),
+            "source": "error"
+        }
+
+# -------------------------
+# MAIN EXTRACTION
+# -------------------------
+def extract_metadata(file_path):
+
+    # 1. prova exiftool
+    data = extract_with_exiftool(file_path)
+    if data:
+        return data
+
+    # 2. fallback pillow
+    return extract_with_pillow(file_path)
+
+# -------------------------
+# RUN
+# -------------------------
+def run_metadata_extractor(base_path):
+    results = []
+
+    for root, _, files in os.walk(base_path):
+        for f in files:
+            ext = os.path.splitext(f)[1].lower()
+
+            if ext in VALID_EXT and is_valid_texture(f):
+                full_path = os.path.join(root, f)
+                results.append(extract_metadata(full_path))
+
+    return results
+
+
+if __name__ == "__main__":
+    data = run_metadata_extractor("01_RAW_ARCHIVE")
+
+    print(f"\nExtracted metadata for {len(data)} files\n")
+
+    # debug
+    for d in data[:3]:
+        print(json.dumps(d, indent=2))    dove metto run_metadata_extractor(material_sets)
+"""
+ingestor.py — DVAMOCLES SWORD™: SIGNUM SENTINEL
+Version 2.1 — Fixed Variant Detection
+
+Scans 01_RAW_ARCHIVE and produces one MaterialSet per material,
+with variants correctly grouped (1K-JPG, 2K-PNG, etc.) as sub-units.
+
+ARCHITECTURE (per REGOLE_GLOBALI):
+  READ  → 01_RAW_ARCHIVE (never modified)
+  WRITE → 03_PROCESSED/manifests/
+
+SUPPORTED STRUCTURES:
+  /Provider/Material/                  (flat: images directly in folder)
+  /Provider/Material/Resolution/       (1-level: 4K/, 2K/, etc.)
+  /Provider/Material/Resolution/Format (2-level: 4K/PNG/, 4K/JPG/)
+  /Provider/Material/MatName_4K-PNG/   (AmbientCG style: variant in folder name)
+"""
+
+import re
+import json
+import uuid
+import hashlib
+import logging
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import Optional
+
+# ── Configuration ─────────────────────────────────────────────────────────────
+
+MIN_FILE_SIZE: int = 512
+
+VALID_EXTENSIONS: set = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr"}
+
+ASSET_EXTENSIONS: set = {".blend", ".sbsar", ".uasset", ".usdc", ".usdz",
+                          ".tres", ".mtlx", ".glb", ".gltf"}
+
+IGNORE_PATTERNS: list = [
+    "thumb", "thumbnail", "preview", "icon", "_t.", "ds_store",
+    "desktop.ini", "readme", "license",
+]
+
+_VARIANT_FOLDER_RE = re.compile(
+    r'^.+[_\-](\d{1,2}[kK])[-_](JPG|PNG|TIFF?|EXR|WEBP)$',
+    re.IGNORECASE,
+)
+
+_RES_ONLY_RE = re.compile(r'^\d{1,2}[kK]$')
+
+_FORMAT_NAMES: set = {"jpg", "jpeg", "png", "tif", "tiff", "exr", "webp"}
+
+_KNOWN_PROVIDERS: dict = {
+    "quixel":     ("Quixel",      "QXL"),
+    "megascans":  ("Quixel",      "QXL"),
+    "poliigon":   ("Poliigon",    "POL"),
+    "ambientcg":  ("AmbientCG",   "ACG"),
+    "ambient_cg": ("AmbientCG",   "ACG"),
+    "ambient cg": ("AmbientCG",   "ACG"),
+    "cc0":        ("AmbientCG",   "ACG"),
+    "cgtrader":   ("CGTrader",    "CGT"),
+    "textures":   ("Textures.com","TCM"),
+    "custom":     ("Custom",      "CUS"),
+}
+
+logger = logging.getLogger("sentinel.ingestor")
+
+
+# ── Data Structures ───────────────────────────────────────────────────────────
+
+@dataclass
+class FileRecord:
+    filename: str
+    path: str
+    extension: str
+    file_size_bytes: int
+    file_hash: str
+    format_class: str = "unknown"
+    source_type: str = "original"
+    generated_from: list = field(default_factory=list)
+    tool: str = ""
+    process: str = ""
+    lineage_confidence: float = 1.0
+
+    def to_dict(self) -> dict:
+        return {
+            "filename":           self.filename,
+            "path":               self.path,
+            "extension":          self.extension,
+            "file_size_bytes":    self.file_size_bytes,
+            "file_hash":          self.file_hash,
+            "format_class":       self.format_class,
+            "source_type":        self.source_type,
+            "generated_from":     self.generated_from,
+            "tool":               self.tool,
+            "process":            self.process,
+            "lineage_confidence": self.lineage_confidence,
+        }
+
+
+@dataclass
+class Variant:
+    variant_id: str
+    resolution: str
+    format: str
+    files: list = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        return {
+            "variant_id": self.variant_id,
+            "resolution": self.resolution,
+            "format":     self.format,
+            "files":      [f.to_dict() for f in self.files],
+            "metadata":   self.metadata,
+        }
+
+
+@dataclass
+class MaterialSet:
+    id: str
+    dva_id: str
+    provider: str
+    provider_code: str
+    material_name: str
+    folder_path: str
+    variants: list = field(default_factory=list)
+    asset_files: list = field(default_factory=list)
+    extra_files: list = field(default_factory=list)
+    category: str = ""
+    scale: str = ""
+    source: str = "unknown"
+    custom_variants: list = field(default_factory=list)
+    notes: str = ""
+    has_process_data: bool = False
+    process_pipeline: list = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {
+            "id":               self.id,
+            "dva_id":           self.dva_id,
+            "provider":         self.provider,
+            "provider_code":    self.provider_code,
+            "material_name":    self.material_name,
+            "folder_path":      self.folder_path,
+            "variants":         [v.to_dict() for v in self.variants],
+            "asset_files":      self.asset_files,
+            "extra_files":      self.extra_files,
+            "category":         self.category,
+            "scale":            self.scale,
+            "source":           self.source,
+            "custom_variants":  self.custom_variants,
+            "notes":            self.notes,
+            "has_process_data": self.has_process_data,
+            "process_pipeline": self.process_pipeline,
+        }
+
+
+# ── Folder Classification ─────────────────────────────────────────────────────
+
+def _classify_subfolder(name: str):
+    """
+    Returns (kind, resolution, format).
+    kind = "variant_named" | "resolution" | "format" | "unknown"
+    """
+    m = _VARIANT_FOLDER_RE.match(name)
+    if m:
+        return "variant_named", m.group(1).upper(), m.group(2).upper()
+    if _RES_ONLY_RE.match(name):
+        return "resolution", name.upper(), ""
+    if name.lower() in _FORMAT_NAMES:
+        return "format", "", name.upper()
+    return "unknown", "", ""
+
+
+def _is_material_folder(folder: Path) -> bool:
+    """True if folder contains PBR content (images or variant subfolders)."""
+    for child in folder.iterdir():
+        if child.is_file():
+            if child.suffix.lower() in VALID_EXTENSIONS:
+                if child.stat().st_size >= MIN_FILE_SIZE:
+                    if not _is_ignored(child.name):
+                        return True
+        elif child.is_dir():
+            kind, _, _ = _classify_subfolder(child.name)
+            if kind in ("variant_named", "resolution"):
+                return True
+    return False
+
+
+def _is_provider_folder(folder: Path, root: Path) -> bool:
+    """True if folder is a depth-1 provider wrapper with no direct images."""
+    try:
+        depth = len(folder.relative_to(root).parts)
+    except ValueError:
+        return False
+    if depth != 1:
+        return False
+    name_lower = folder.name.lower()
+    for key in _KNOWN_PROVIDERS:
+        if key in name_lower:
+            return True
+    # Unknown name at depth 1 with only subdirs and no images → wrapper
+    has_images = any(
+        c.is_file() and c.suffix.lower() in VALID_EXTENSIONS
+        for c in folder.iterdir()
+    )
+    if has_images:
+        return False
+    all_dirs = all(c.is_dir() for c in folder.iterdir() if not c.name.startswith("."))
+    return all_dirs
+
+
+def _is_ignored(filename: str) -> bool:
+    lower = filename.lower()
+    return any(p in lower for p in IGNORE_PATTERNS)
+
+
+# ── Provider Detection ────────────────────────────────────────────────────────
+
+def _detect_provider(folder: Path, root: Path):
+    try:
+        parts = folder.relative_to(root).parts
+    except ValueError:
+        return "Unknown", "UNK"
+    for part in parts[:-1]:
+        lower = part.lower()
+        for key, (name, code) in _KNOWN_PROVIDERS.items():
+            if key in lower:
+                return name, code
+    if len(parts) >= 2:
+        ancestor = parts[0]
+        code = re.sub(r'[^A-Za-z]', '', ancestor)[:3].upper() or "GEN"
+        return ancestor.title(), code
+    return "Unknown", "UNK"
+
+
+# ── File Helpers ──────────────────────────────────────────────────────────────
+
+def _collect_image_files(folder: Path) -> list:
+    result = []
+    for f in folder.iterdir():
+        if (f.is_file()
+                and f.suffix.lower() in VALID_EXTENSIONS
+                and f.stat().st_size >= MIN_FILE_SIZE
+                and not _is_ignored(f.name)):
+            result.append(f)
+    return sorted(result)
+
+
+def _build_file_record(path: Path, process_pipeline: list) -> FileRecord:
+    h = hashlib.sha256()
+    try:
+        with open(path, "rb") as fh:
+            h.update(fh.read(16384))
+    except Exception:
+        pass
+    fr = FileRecord(
+        filename=path.name,
+        path=str(path),
+        extension=path.suffix.lower(),
+        file_size_bytes=path.stat().st_size,
+        file_hash=h.hexdigest()[:16],
+        format_class=path.suffix.lower().lstrip("."),
+    )
+    for entry in process_pipeline:
+        if entry.get("output") == path.name:
+            fr.source_type         = "generated"
+            fr.generated_from      = entry.get("generated_from", [])
+            fr.tool                = entry.get("tool", "")
+            fr.process             = entry.get("process", "")
+            fr.lineage_confidence  = entry.get("confidence", 0.9)
+            break
+    return fr
+
+
+def _infer_format(files: list) -> str:
+    exts = {f.suffix.lower() for f in files}
+    if ".png"  in exts: return "PNG"
+    if ".jpg"  in exts: return "JPG"
+    if ".jpeg" in exts: return "JPG"
+    if ".tif"  in exts: return "TIFF"
+    if ".tiff" in exts: return "TIFF"
+    if ".exr"  in exts: return "EXR"
+    return "MIX"
+
+
+def _infer_resolution(files: list, folder: Path) -> str:
+    for f in files:
+        m = re.search(r'[_\-](\d{1,2}[kK])[_\-\.]', f.stem + ".", re.IGNORECASE)
+        if m:
+            return m.group(1).upper()
+        m = re.search(r'[_\-](4096|8192|2048|1024|512)[_\-\.]', f.stem + ".")
+        if m:
+            px = int(m.group(1))
+            for thr, lbl in ((7681,"8K"),(3841,"4K"),(2049,"2K"),(1025,"1K")):
+                if px >= thr: return lbl
+    try:
+        from PIL import Image
+        with Image.open(files[0]) as img:
+            px = max(img.size)
+            for thr, lbl in ((7681,"8K"),(3841,"4K"),(2049,"2K"),(1025,"1K")):
+                if px >= thr: return lbl
+    except Exception:
+        pass
+    return "UNKNOWN"
+
+
+# ── Variant Building ──────────────────────────────────────────────────────────
+
+def _build_variants(folder: Path, dva_id: str, process_pipeline: list) -> list:
+    """
+    Detect and build Variant objects for a material folder.
+    Priority: named variants > resolution subfolders > flat.
+    """
+    variants = []
+    named_variants = []
+    resolution_folders = []
+
+    for child in sorted(folder.iterdir()):
+        if not child.is_dir():
+            continue
+        kind, res, fmt = _classify_subfolder(child.name)
+        if kind == "variant_named":
+            named_variants.append((child, res, fmt))
+        elif kind == "resolution":
+            resolution_folders.append((child, res))
+
+    # ── Case 1: AmbientCG named variants ─────────────────────────────────────
+    if named_variants:
+        for vfolder, res, fmt in named_variants:
+            files = _collect_image_files(vfolder)
+            if not files:
+                continue
+            v = Variant(
+                variant_id=f"{dva_id}_{res}_{fmt}",
+                resolution=res,
+                format=fmt,
+            )
+            for fp in files:
+                v.files.append(_build_file_record(fp, process_pipeline))
+            variants.append(v)
+        return variants
+
+    # ── Case 2: Resolution subfolders ────────────────────────────────────────
+    if resolution_folders:
+        for res_folder, res in resolution_folders:
+            fmt_subfolders = [
+                c for c in res_folder.iterdir()
+                if c.is_dir() and _classify_subfolder(c.name)[0] == "format"
+            ]
+            if fmt_subfolders:
+                for fmt_folder in sorted(fmt_subfolders):
+                    _, _, fmt = _classify_subfolder(fmt_folder.name)
+                    files = _collect_image_files(fmt_folder)
+                    if not files:
+                        continue
+                    v = Variant(
+                        variant_id=f"{dva_id}_{res}_{fmt or 'UNK'}",
+                        resolution=res,
+                        format=fmt,
+                    )
+                    for fp in files:
+                        v.files.append(_build_file_record(fp, process_pipeline))
+                    variants.append(v)
+            else:
+                files = _collect_image_files(res_folder)
+                if not files:
+                    continue
+                fmt = _infer_format(files)
+                v = Variant(
+                    variant_id=f"{dva_id}_{res}_{fmt}",
+                    resolution=res,
+                    format=fmt,
+                )
+                for fp in files:
+                    v.files.append(_build_file_record(fp, process_pipeline))
+                variants.append(v)
+        return variants
+
+    # ── Case 3: Flat structure ────────────────────────────────────────────────
+    direct = _collect_image_files(folder)
+    if direct:
+        res = _infer_resolution(direct, folder)
+        fmt = _infer_format(direct)
+        v = Variant(
+            variant_id=f"{dva_id}_{res}_{fmt}",
+            resolution=res,
+            format=fmt,
+        )
+        for fp in direct:
+            v.files.append(_build_file_record(fp, process_pipeline))
+        variants.append(v)
+
+    return variants
+
+
+# ── Sidecar Loaders ───────────────────────────────────────────────────────────
+
+def _load_material_info(folder: Path, mat: MaterialSet):
+    p = folder / "material_info.json"
+    if not p.exists():
+        return
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        if "material" in data:
+            mat.material_name = re.sub(r'\s+', '_', data["material"].strip())
+        mat.category        = data.get("category", mat.category)
+        mat.scale           = data.get("scale", "")
+        mat.source          = data.get("source", mat.source)
+        mat.custom_variants = data.get("variants", [])
+        mat.notes           = data.get("notes", "")
+    except Exception as e:
+        logger.warning(f"material_info.json error ({folder.name}): {e}")
+
+
+def _load_process_json(folder: Path, mat: MaterialSet):
+    p = folder / "process.json"
+    if not p.exists():
+        return
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        mat.has_process_data = True
+        mat.process_pipeline = data.get("pipeline", [])
+        if "source" in data:
+            mat.source = data["source"]
+    except Exception as e:
+        logger.warning(f"process.json error ({folder.name}): {e}")
+
+
+# ── Ingestor ──────────────────────────────────────────────────────────────────
+
+class Ingestor:
+    """
+    Scans 01_RAW_ARCHIVE.
+    Returns one MaterialSet per physical material, variants properly grouped.
+
+    Usage:
+        result = Ingestor("./01_RAW_ARCHIVE").scan()
+    """
+
+    def __init__(self, root_path: str, min_file_size: int = MIN_FILE_SIZE):
+        self.root = Path(root_path)
+        self.min_file_size = min_file_size
+        self._materials: list = []
+
+    def scan(self) -> dict:
+        if not self.root.exists():
+            raise FileNotFoundError(f"Root not found: {self.root}")
+        logger.info(f"Ingestor v2.1 scanning: {self.root}")
+        self._materials = []
+
+        material_folders = self._discover_material_folders()
+        logger.info(f"Ingestor: {len(material_folders)} material folder(s)")
+
+        for folder in sorted(material_folders):
+            mat = self._process_folder(folder)
+            if mat:
+                self._materials.append(mat)
+                logger.info(f"  [{mat.provider_code}] {mat.material_name} → {len(mat.variants)} variant(s)")
+
+        logger.info(f"Ingestor: {len(self._materials)} MaterialSet(s) built")
+        return self._build_output()
+
+    def get_materials(self) -> list:
+        return self._materials
+
+    def save_manifest(self, output_path: str) -> str:
+        out = self._build_output()
+        p = Path(output_path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(out, indent=2, ensure_ascii=False))
+        logger.info(f"Manifest saved → {output_path}")
+        return output_path
+
+    def summary(self) -> dict:
+        return self._build_output()["summary"]
+
+    # ── Discovery ─────────────────────────────────────────────────────────────
+
+    def _discover_material_folders(self) -> list:
+        """
+        Walk root BFS. Identify material folders.
+        Claim variant subfolders so they are not treated as separate materials.
+        """
+        candidates = []
+        claimed: set = set()
+
+        queue = [self.root]
+        while queue:
+            current = queue.pop(0)
+
+            # Skip claimed folders (they are variants owned by a parent)
+            if current in claimed:
+                continue
+
+            # Skip provider wrappers at depth 1
+            if current != self.root and _is_provider_folder(current, self.root):
+                # Enqueue children (material folders inside provider)
+                for child in sorted(current.iterdir()):
+                    if child.is_dir():
+                        queue.append(child)
+                continue
+
+            # Skip folders that look like variants themselves
+            kind, _, _ = _classify_subfolder(current.name)
+            if kind in ("variant_named", "resolution", "format") and current != self.root:
+                continue
+
+            # Check if this is a material
+            if current != self.root and _is_material_folder(current):
+                candidates.append(current)
+                # Claim all direct and grandchild dirs (variant subfolders)
+                for child in current.iterdir():
+                    if child.is_dir():
+                        claimed.add(child)
+                        for grandchild in child.iterdir():
+                            if grandchild.is_dir():
+                                claimed.add(grandchild)
+                continue
+
+            # Not a material yet — keep walking
+            for child in sorted(current.iterdir()):
+                if child.is_dir() and child not in claimed:
+                    queue.append(child)
+
+        return candidates
+
+    # ── Material Processing ───────────────────────────────────────────────────
+
+    def _process_folder(self, folder: Path) -> Optional[MaterialSet]:
+        provider, provider_code = _detect_provider(folder, self.root)
+        raw_name  = folder.name.strip()
+        mat_name  = re.sub(r'\s+', '_', raw_name)
+
+        uid    = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(folder.resolve())))
+        dva_id = f"DVA_{provider_code}_{mat_name}"
+
+        mat = MaterialSet(
+            id=uid,
+            dva_id=dva_id,
+            provider=provider,
+            provider_code=provider_code,
+            material_name=mat_name,
+            folder_path=str(folder),
+            source=provider.lower(),
+        )
+
+        _load_material_info(folder, mat)
+        _load_process_json(folder, mat)
+
+        mat.variants = _build_variants(folder, dva_id, mat.process_pipeline)
+
+        if not mat.variants:
+            return None
+
+        # Collect non-image files
+        for child in folder.rglob("*"):
+            if child.is_file():
+                ext = child.suffix.lower()
+                if ext in ASSET_EXTENSIONS:
+                    mat.asset_files.append(str(child))
+                elif ext not in VALID_EXTENSIONS and not _is_ignored(child.name):
+                    mat.extra_files.append(str(child))
+
+        return mat
+
+    # ── Output ────────────────────────────────────────────────────────────────
+
+    def _build_output(self) -> dict:
+        mats = [m.to_dict() for m in self._materials]
+        total_files = sum(len(v["files"]) for m in mats for v in m["variants"])
+        return {
+            "materials": mats,
+            "summary": {
+                "total_materials":   len(mats),
+                "total_files":       total_files,
+                "providers":         sorted({m["provider"] for m in mats}),
+                "resolutions_found": sorted({v["resolution"] for m in mats for v in m["variants"]}),
+            },
+        }
+
+
+# ── Main Test ─────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    import sys, os
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)-22s] %(levelname)s %(message)s",
+    )
+
+    root = sys.argv[1] if len(sys.argv) > 1 else "./01_RAW_ARCHIVE"
+
+    if not os.path.exists(root):
+        print(f"Path not found: {root}")
+        sys.exit(1)
+
+    ingestor = Ingestor(root_path=root)
+    result   = ingestor.scan()
+    summary  = result["summary"]
+
+    print()
+    print("=" * 60)
+    print("INGESTOR v2.1 — SCAN SUMMARY")
+    print("=" * 60)
+    print(f"  Materials found   : {summary['total_materials']}")
+    print(f"  Total files       : {summary['total_files']}")
+    print(f"  Providers         : {', '.join(summary['providers']) or 'none'}")
+    print(f"  Resolutions found : {', '.join(summary['resolutions_found']) or 'none'}")
+    print()
+
+    for mat in result["materials"]:
+        tag = " (process.json)" if mat["has_process_data"] else ""
+        print(f"  [{mat['provider_code']}] {mat['material_name']}{tag}")
+        for v in mat["variants"]:
+            gen = sum(1 for f in v["files"] if f["source_type"] == "generated")
+            g = f"  [{gen} generated]" if gen else ""
+            print(f"    {v['resolution']}-{v['format']}: {len(v['files'])} files{g}")
+        if mat["asset_files"]:
+            print(f"    Asset files: {len(mat['asset_files'])}")
+    print("=" * 60)   ingestor                                                                      import os
+import json
+import subprocess
+from PIL import Image
+
+VALID_EXT = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr"]
+
+IGNORE_KEYWORDS = ["preview", "thumbnail", "icon", "screenshot"]
+
+# -------------------------
+# FILTER
+# -------------------------
+def is_valid_texture(filename):
+    name = filename.lower()
+    return not any(k in name for k in IGNORE_KEYWORDS)
+
+# -------------------------
+# EXIFTOOL
+# -------------------------
+def extract_with_exiftool(file_path):
+    try:
+        result = subprocess.run(
+            ["exiftool", "-j", file_path],
+            capture_output=True,
+            text=True
+        )
+
+        data = json.loads(result.stdout)[0]
+
+        return {
+            "path": file_path,
+            "name": os.path.basename(file_path),
+
+            "metadata_raw": data,  # TUTTO
+
+            "file_size_kb": round(os.path.getsize(file_path) / 1024, 2),
+            "source": "exiftool"
+        }
+
+    except Exception as e:
+        return None
+
+# -------------------------
+# PILLOW FALLBACK
+# -------------------------
+def extract_with_pillow(file_path):
+    try:
+        with Image.open(file_path) as img:
+            return {
+                "path": file_path,
+                "name": os.path.basename(file_path),
+
+                "resolution": {
+                    "width": img.width,
+                    "height": img.height
+                },
+
+                "mode": img.mode,
+                "format": img.format,
+
+                "channels": len(img.getbands()),
+                "has_alpha": "A" in img.getbands(),
+
+                "file_size_kb": round(os.path.getsize(file_path) / 1024, 2),
+
+                "source": "pillow"
+            }
+
+    except Exception as e:
+        return {
+            "path": file_path,
+            "error": str(e),
+            "source": "error"
+        }
+
+# -------------------------
+# MAIN EXTRACTION
+# -------------------------
+def extract_metadata(file_path):
+
+    # 1. prova exiftool
+    data = extract_with_exiftool(file_path)
+    if data:
+        return data
+
+    # 2. fallback pillow
+    return extract_with_pillow(file_path)
+
+# -------------------------
+# RUN
+# -------------------------
+def material_sets = run_ingestor("01_RAW_ARCHIVE")
+enrich_material_sets(material_sets)
+    results = []
+
+    for root, _, files in os.walk(base_path):
+        for f in files:
+            ext = os.path.splitext(f)[1].lower()
+
+            if ext in VALID_EXT and is_valid_texture(f):
+                full_path = os.path.join(root, f)
+                results.append(extract_metadata(full_path))
+
+    return results
+
+
+if __name__ == "__main__":
+    data = run_metadata_extractor("01_RAW_ARCHIVE")
+
+    print(f"\nExtracted metadata for {len(data)} files\n")
+
+    # debug
+    for d in data[:3]:
+        print(json.dumps(d, indent=2)) metadata extractor                           """
+naming_intelligence.py — DVAMOCLES SWORD™: SIGNUM SENTINEL
+Version 2.0 — Vendor-Aware Map Type Detection
+
+Detects PBR texture map types from filenames using regex + keyword matching.
+Supports standard conventions AND vendor-specific naming (Quixel, AmbientCG,
+Poliigon, Substance Designer output, etc.).
+
+Also detects:
+  - NormalDX vs NormalGL (convention flag)
+  - Packed maps (ORM, RMA, ARM, MaskMap)
+
+Usage:
+    from naming_intelligence import NamingIntelligence
+    ni = NamingIntelligence()
+    result = ni.classify("Rock_4K_NormalDX.png")
+    # result.map_type == "normal"
+    # result.convention == "DX"
+"""
+
+import re
+import logging
+from dataclasses import dataclass, field
+from typing import Optional
+
+logger = logging.getLogger("sentinel.naming")
+
+# ── Map Type Keyword Dictionary ───────────────────────────────────────────────
+
+MAP_PATTERNS: dict = {
+
+    "albedo": {
+        "suffixes": [
+            "_bc", "_basecolor", "_base_color", "_albedo", "_alb",
+            "_diffuse", "_diff", "_color", "_col", "_d",
+        ],
+        "keywords": [
+            "albedo", "basecolor", "base_color", "diffuse", "color",
+        ],
+        # AmbientCG uses "Color" as the albedo map name
+        "exact_tokens": ["color"],
+        "color_space": "sRGB",
+        "packed": False,
+    },
+
+    "normal": {
+        "suffixes": [
+            "_n", "_normal", "_nrm", "_nor", "_nm",
+            "_normaldx", "_normalgl", "_normal_dx", "_normal_gl",
+            "_nmap",
+        ],
+        "keywords": ["normal", "nrm", "normalmap"],
+        "exact_tokens": ["normaldx", "normalgl", "normal"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    "roughness": {
+        "suffixes": [
+            "_r", "_roughness", "_rough", "_rgh",
+            "_smoothness", "_gloss", "_glossiness",
+        ],
+        "keywords": ["roughness", "rough", "smoothness", "gloss"],
+        "exact_tokens": ["roughness"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    "metallic": {
+        "suffixes": [
+            "_m", "_metallic", "_metal", "_mtl", "_met",
+        ],
+        "keywords": ["metallic", "metalness", "metal"],
+        "exact_tokens": ["metallic"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    "ao": {
+        "suffixes": [
+            "_ao", "_occlusion", "_occ", "_ambientocclusion",
+            "_ambient_occlusion",
+        ],
+        "keywords": ["ambientocclusion", "occlusion", "_ao"],
+        "exact_tokens": ["ao", "ambientocclusion"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    "height": {
+        "suffixes": [
+            "_h", "_height", "_disp", "_displacement",
+            "_bump", "_parallax",
+        ],
+        "keywords": ["height", "displacement", "disp", "bump"],
+        "exact_tokens": ["height", "displacement"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    "emissive": {
+        "suffixes": ["_em", "_emissive", "_emit", "_glow"],
+        "keywords": ["emissive", "emit", "glow"],
+        "exact_tokens": ["emissive"],
+        "color_space": "sRGB",
+        "packed": False,
+    },
+
+    "opacity": {
+        "suffixes": ["_op", "_opacity", "_alpha", "_transparency"],
+        "keywords": ["opacity", "alpha", "transparency"],
+        "exact_tokens": ["opacity", "alpha"],
+        "color_space": "Linear",
+        "packed": False,
+    },
+
+    # ── Packed Maps ───────────────────────────────────────────────────────────
+
+    "orm": {
+        "suffixes": ["_orm"],
+        "keywords": ["orm"],
+        "exact_tokens": ["orm"],
+        "color_space": "Linear",
+        "packed": True,
+        "channels": {"R": "ao", "G": "roughness", "B": "metallic"},
+    },
+
+    "rma": {
+        "suffixes": ["_rma"],
+        "keywords": ["rma"],
+        "exact_tokens": ["rma"],
+        "color_space": "Linear",
+        "packed": True,
+        "channels": {"R": "roughness", "G": "metallic", "B": "ao"},
+    },
+
+    "arm": {
+        "suffixes": ["_arm"],
+        "keywords": ["arm"],
+        "exact_tokens": ["arm"],
+        "color_space": "Linear",
+        "packed": True,
+        "channels": {"R": "ao", "G": "roughness", "B": "metallic"},
+    },
+
+    "maskmap": {
+        "suffixes": ["_maskmap", "_mask_map"],
+        "keywords": ["maskmap"],
+        "exact_tokens": ["maskmap"],
+        "color_space": "Linear",
+        "packed": True,
+        "channels": {"R": "metallic", "G": "ao", "B": "none", "A": "roughness_inv"},
+    },
+
+    "materialcontrol": {
+        "suffixes": ["_mc", "_materialcontrol"],
+        "keywords": ["materialcontrol"],
+        "exact_tokens": ["mc"],
+        "color_space": "Linear",
+        "packed": True,
+        "channels": {"R": "roughness", "G": "metallic", "B": "ao", "A": "custom"},
+    },
+}
+
+# ── Normal Convention Detection ───────────────────────────────────────────────
+
+_NORMAL_CONVENTION_RE = re.compile(r'normaldx|normal_dx', re.IGNORECASE)
+_NORMAL_GL_RE         = re.compile(r'normalgl|normal_gl',  re.IGNORECASE)
+
+
+# ── Result Dataclass ──────────────────────────────────────────────────────────
+
+@dataclass
+class NamingResult:
+    map_type: str           # "albedo", "normal", "roughness", … or "unknown"
+    confidence: float       # 0.0 – 1.0
+    method: str             # "exact_token" | "suffix_match" | "keyword_match" | "unknown"
+    is_packed: bool = False
+    packed_channels: dict = field(default_factory=dict)
+    convention: Optional[str] = None  # "DX" | "GL" | None (for normal maps)
+    color_space: str = ""
+
+    def to_dict(self) -> dict:
+        return {
+            "map_type":        self.map_type,
+            "confidence":      self.confidence,
+            "method":          self.method,
+            "is_packed":       self.is_packed,
+            "packed_channels": self.packed_channels,
+            "convention":      self.convention,
+            "color_space":     self.color_space,
+        }
+
+
+# ── Core Classifier ───────────────────────────────────────────────────────────
+
+class NamingIntelligence:
+    """
+    Classifies PBR texture filenames into map types.
+
+    Three detection passes (in priority order):
+    1. Exact token match — highest confidence (0.97)
+       Splits filename into tokens and checks each against exact_tokens list.
+    2. Suffix match — high confidence (0.90)
+       Checks if lowercase stem ends with a known suffix.
+    3. Keyword match — medium confidence (0.75)
+       Substring search across the lowercase stem.
+    """
+
+    def __init__(self, patterns: Optional[dict] = None):
+        self.patterns = patterns or MAP_PATTERNS
+
+    # ── Public API ────────────────────────────────────────────────────────────
+
+    def classify(self, filename: str) -> NamingResult:
+        """
+        Classify a single filename.
+
+        Args:
+            filename: bare filename or full path (only stem is used)
+
+        Returns:
+            NamingResult with map_type, confidence, method, etc.
+        """
+        from pathlib import Path as _Path
+        stem = _Path(filename).stem
+
+        result = self._run_passes(stem)
+
+        # Detect normal map convention (DX vs GL)
+        if result.map_type == "normal":
+            result.convention = self._detect_convention(stem)
+
+        return result
+
+    def classify_batch(self, file_list: list) -> dict:
+        """
+        Classify a list of filenames.
+
+        Returns:
+            {filename: NamingResult, ...}
+        """
+        return {f: self.classify(f) for f in file_list}
+
+    def summarize_set(self, results: dict) -> dict:
+        """
+        Given a classify_batch result, produce a coverage summary.
+
+        Returns:
+            {
+              "covered": ["albedo", "normal", ...],
+              "missing": ["metallic", ...],
+              "unknown": ["file_x.png", ...],
+              "packed": ["Rock_ORM.png", ...],
+              "normal_conventions": {"DX": [...], "GL": [...]},
+            }
+        """
+        covered: set = set()
+        unknown: list = []
+        packed: list = []
+        normal_conventions: dict = {"DX": [], "GL": [], "ambiguous": []}
+
+        required = {"albedo", "normal", "roughness"}
+
+        for fname, r in results.items():
+            if r.map_type == "unknown":
+                unknown.append(fname)
+            else:
+                if r.is_packed:
+                    packed.append(fname)
+                    # Packed maps cover their constituent channels
+                    for ch in r.packed_channels.values():
+                        covered.add(ch.replace("_inv", ""))
+                else:
+                    covered.add(r.map_type)
+
+                if r.map_type == "normal":
+                    key = r.convention if r.convention else "ambiguous"
+                    normal_conventions[key].append(fname)
+
+        missing = sorted(required - covered)
+
+        return {
+            "covered":            sorted(covered),
+            "missing":            missing,
+            "unknown_files":      unknown,
+            "packed_maps":        packed,
+            "normal_conventions": normal_conventions,
+        }
+
+    # ── Detection Passes ─────────────────────────────────────────────────────
+
+    def _run_passes(self, stem: str) -> NamingResult:
+        lower = stem.lower()
+        tokens = set(re.split(r'[_\-\s]+', lower))
+
+        # Pass 1 — exact token match (highest confidence)
+        for map_type, cfg in self.patterns.items():
+            for tok in cfg.get("exact_tokens", []):
+                if tok in tokens:
+                    return NamingResult(
+                        map_type=map_type,
+                        confidence=0.97,
+                        method="exact_token",
+                        is_packed=cfg.get("packed", False),
+                        packed_channels=cfg.get("channels", {}),
+                        color_space=cfg.get("color_space", ""),
+                    )
+
+        # Pass 2 — suffix match
+        for map_type, cfg in self.patterns.items():
+            for suffix in cfg.get("suffixes", []):
+                if lower.endswith(suffix):
+                    return NamingResult(
+                        map_type=map_type,
+                        confidence=0.90,
+                        method="suffix_match",
+                        is_packed=cfg.get("packed", False),
+                        packed_channels=cfg.get("channels", {}),
+                        color_space=cfg.get("color_space", ""),
+                    )
+
+        # Pass 3 — keyword substring match
+        for map_type, cfg in self.patterns.items():
+            for kw in cfg.get("keywords", []):
+                if kw in lower:
+                    return NamingResult(
+                        map_type=map_type,
+                        confidence=0.75,
+                        method="keyword_match",
+                        is_packed=cfg.get("packed", False),
+                        packed_channels=cfg.get("channels", {}),
+                        color_space=cfg.get("color_space", ""),
+                    )
+
+        return NamingResult(
+            map_type="unknown",
+            confidence=0.0,
+            method="unknown",
+        )
+
+    def _detect_convention(self, stem: str) -> Optional[str]:
+        if _NORMAL_CONVENTION_RE.search(stem):
+            return "DX"
+        if _NORMAL_GL_RE.search(stem):
+            return "GL"
+        # Heuristic: files from UE5/Quixel pipelines default to DX
+        if re.search(r'quixel|ue5|unreal|megascans', stem, re.IGNORECASE):
+            return "DX"
+        return None  # ambiguous
+
+
+# ── Convenience Functions ─────────────────────────────────────────────────────
+
+def detect_map_type(filename: str) -> dict:
+    """
+    Convenience wrapper around NamingIntelligence.classify().
+
+    Returns dict compatible with pipeline JSON output:
+        {"type": "albedo", "confidence": 0.97, "method": "exact_token"}
+    """
+    ni = NamingIntelligence()
+    r = ni.classify(filename)
+    return {"type": r.map_type, "confidence": r.confidence, "method": r.method}
+
+
+def analyze_files(file_list: list) -> dict:
+    """
+    Batch classify a list of filenames.
+
+    Returns:
+        {filename: {"type": ..., "confidence": ..., "method": ..., ...}, ...}
+    """
+    ni = NamingIntelligence()
+    results = ni.classify_batch(file_list)
+    return {fname: r.to_dict() for fname, r in results.items()}
+
+
+# ── Main Test ─────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    import sys
+
+    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+
+    test_filenames = [
+        # Quixel style
+        "Worn_Concrete_01_Albedo.png",
+        "Worn_Concrete_01_Normal.png",
+        "Worn_Concrete_01_Roughness.png",
+        "Worn_Concrete_01_AO.png",
+        "Worn_Concrete_01_Displacement.png",
+
+        # AmbientCG style
+        "Tiles138_Color.jpg",
+        "Tiles138_NormalDX.jpg",
+        "Tiles138_NormalGL.jpg",
+        "Tiles138_Roughness.jpg",
+        "Tiles138_AmbientOcclusion.jpg",
+        "Tiles138_Displacement.jpg",
+
+        # Poliigon / generic
+        "oak_diff_2k.jpg",
+        "oak_nrm_2k.jpg",
+
+        # Packed maps
+        "Rock_ORM.png",
+        "Wood_RMA.png",
+        "Metal_MaskMap.png",
+        "T_Concrete_MC.png",
+
+        # Tricky
+        "T_Rock_01_BC.tga",
+        "T_Rock_01_N.tga",
+        "T_Rock_01_R.tga",
+        "T_Rock_01_M.tga",
+
+        # Unknown
+        "preview.png",
+        "thumbnail_256.png",
+        "material_info.json",
+    ]
+
+    ni = NamingIntelligence()
+    results_raw = ni.classify_batch(test_filenames)
+
+    print()
+    print("=" * 72)
+    print(f"{'FILENAME':<42} {'TYPE':<18} {'CONF':>5}  METHOD")
+    print("=" * 72)
+
+    for fname, r in results_raw.items():
+        extra = ""
+        if r.is_packed:
+            extra = f"  [packed: {','.join(r.packed_channels.values())}]"
+        if r.convention:
+            extra += f"  [{r.convention}]"
+        print(f"  {fname:<40} {r.map_type:<18} {r.confidence:>5.2f}  {r.method}{extra}")
+
+    print()
+    summary = ni.summarize_set(results_raw)
+    print("COVERAGE SUMMARY")
+    print(f"  Covered : {', '.join(summary['covered']) or 'none'}")
+    print(f"  Missing : {', '.join(summary['missing']) or 'none'}")
+    print(f"  Packed  : {', '.join(summary['packed_maps']) or 'none'}")
+    if summary["unknown_files"]:
+        print(f"  Unknown : {', '.join(summary['unknown_files'])}")
+    conv = summary["normal_conventions"]
+    if conv["DX"]:   print(f"  Normal DX: {', '.join(conv['DX'])}")
+    if conv["GL"]:   print(f"  Normal GL: {', '.join(conv['GL'])}")
+    print("=" * 72) name intelligence. riscrivimi questi 3 codici integrandoli sistemandoli e tutto 
+4. MAIN RUN (AVVIO REALE) dove lo metto poi ho messo exiftool in windows alla fine
+result = subprocess.run(
+    ["exiftool", "-j", file_path], dove lo metto aiutami
+ho un output ma supponendo di aggiungere altri set si aggiorna il file o e per materiale?
