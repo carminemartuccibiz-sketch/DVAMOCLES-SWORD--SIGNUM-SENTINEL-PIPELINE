@@ -1,0 +1,11 @@
+{
+    "Generic": {
+        "tiles138": "THUBNAIL",
+        "_ambientocclusion": "AMBIENT_OCCLUSION",
+        "_color": "ALBEDO",
+        "_displacement": "HEIGHT",
+        "_normaldx": "NORMAL",
+        "_normalgl": "NORMAL",
+        "_roughness": "ROUGHNESS"
+    }
+}
