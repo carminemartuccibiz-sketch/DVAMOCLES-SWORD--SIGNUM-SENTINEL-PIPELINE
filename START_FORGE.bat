@@ -1,6 +1,6 @@
 @echo off
-title DVAMOCLES SWORD - SIGNUM SENTINEL
-color 0c
+title DVAMOCLES SWORD (TM) - MASTER DATA FORGE
+color 0B
 
 echo ========================================================
 echo        DVAMOCLES SWORD (TM) - MASTER DATA FORGE
@@ -8,8 +8,13 @@ echo ========================================================
 echo Inizializzazione moduli Core e AI in corso...
 echo.
 
-:: Avvia l'interfaccia grafica
+:: Se usi un ambiente virtuale (es. cartella venv), lo attiva automaticamente
+if exist venv\Scripts\activate (
+    call venv\Scripts\activate
+)
+
+:: Avvia la GUI
 python main_gui.py
 
-:: Se l'app si chiude per un errore critico, non fa chiudere subito la finestra
+:: Lascia la finestra aperta in caso di crash per leggere l'errore
 pause
