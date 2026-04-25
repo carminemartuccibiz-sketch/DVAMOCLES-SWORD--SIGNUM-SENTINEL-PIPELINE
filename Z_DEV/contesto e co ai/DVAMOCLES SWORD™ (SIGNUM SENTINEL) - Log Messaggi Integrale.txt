@@ -1,0 +1,42 @@
+﻿DVAMOCLES SWORD™ (SIGNUM SENTINEL) - Log Integrale Conversazione
+Questo documento contiene la trascrizione integrale dei messaggi e delle soluzioni tecniche scambiate durante la sessione di sviluppo della pipeline SIGNUM SENTINEL.
+________________
+Turno 1: Gestione Normal Map Convention
+Utente: fermati dobbiamo sistemare il capo texture type normal. di default se non specificato o riconosciuto quindi non si sta non selezione ne dx ne gl e come dettaglio da normal. nel caso in cui si seleziona poi dx da normal_dx gl normal_gl e deve aggiornare la name convencion e tutto
+Gemini: Ha implementato la logica di fusione del tag (NORMAL, NORMAL_DX, NORMAL_GL) e l'apprendimento automatico tramite Auto-Sort. Aggiornati core/import_assistant.py e main_gui.py.
+________________
+Turno 2: Debugging TclError (GUI Crash)
+Utente: [Segnala errore _tkinter.TclError: window ... isn't packed]
+Gemini: Identificato il problema nell'uso di before=self.stage_scroll all'interno di CustomTkinter. Fornito il fix rimuovendo il parametro critico per stabilizzare il layout.
+________________
+Turno 3: Analisi Report Claude AI
+Utente: [Allega report di analisi di Claude AI]
+Gemini: Analizzato il report. Punti critici evidenziati: Naming hardcoded, duplicazione Oracle, e loop dell'importer incompleto. Avviato piano d'azione per la Fase 3.
+________________
+Turno 4: Ottimizzazione Auto-Sort (Fuzzy Matching)
+Utente: auto sorting pessimo erano semplicente delle subfolder del material che gia esisteva e a fatto un casino
+Gemini: Riscritto l'algoritmo di sorting in main_gui.py. La nuova logica "Fuzzy Matcher" controlla prima i materiali esistenti nel Vault e smista i file nelle sottocartelle corrette (es. 1K-PNG) invece di creare nuovi materiali errati.
+________________
+Turno 5: Icona e Accesso Rapido
+Utente: [Allega immagine Aquila Imperiale] generami tu sia il codice sia il file dell logo...
+Gemini: Creato start_forge.bat e lo script setup_icon.py che converte l'immagine in .ico e crea un collegamento sul Desktop con l'icona personalizzata.
+________________
+Turno 6: Fase 3 - AI Vision & Universal Parser
+Utente: facciamo una cosa migliore fase 3 inseriamo librerie ai e librerie phyton per migliorare l'import il detecting e tutto...
+Gemini: Progettata l'architettura dei nuovi "sensi":
+* VisionEngine: AI Image-to-Text (BLIP) per descrizioni automatiche.
+* VisualAnalyzer: Analisi pixel (OpenCV) per validazione tecnica.
+* UniversalParser: Lettura .mtlx e .tres per apprendimento regole.
+Creato install_dependencies.bat.
+
+
+________________
+Turno 7: Fix Ereditarietà GUI e Python 3.14
+Utente: [Segnala AttributeError su .tk e drop_target_register]
+Gemini: Risolto il conflitto tra customtkinter e tkinterdnd2. Implementata la classe BaseGUI per gestire correttamente la multi-ereditarietà e l'inizializzazione del modulo Tcl, rendendo il Drag & Drop stabile anche su versioni sperimentali di Python.
+________________
+Turno 8: Integrazione Cursor AI
+Utente: ho pensato di aggiungere cursor ai... generami un prompt esaustivo.
+Gemini: Generato un prompt strutturato per istruire Cursor AI come Senior Architect, includendo la panoramica dei moduli e la lista dei fix necessari basati sull'audit.
+________________
+Log finale generato per l'archiviazione del progetto.

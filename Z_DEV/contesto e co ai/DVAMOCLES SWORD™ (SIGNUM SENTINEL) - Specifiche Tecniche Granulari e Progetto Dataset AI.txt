@@ -1,0 +1,50 @@
+﻿DVAMOCLES SWORD™ (SIGNUM SENTINEL) - Master Specification & Architectural Blueprint
+Questo documento costituisce la specifica tecnica definitiva e granulare per lo sviluppo del modulo SIGNUM SENTINEL, cuore pulsante della pipeline DVAMOCLES SWORD™. Il sistema è concepito come una stazione di controllo totale per la gestione di asset PBR (Physically Based Rendering), finalizzata alla creazione di un dataset di addestramento per intelligenze artificiali proprietarie.
+1. Visione Generale e Mission
+SIGNUM SENTINEL automatizza l'ingestione, la validazione fisica e la catalogazione semantica di texture. Il sistema non si limita all'organizzazione dei file, ma "comprende" l'essenza tecnica e visuale del materiale attraverso un'analisi multi-livello (Naming, Pixel, Vision AI).
+2. Struttura delle Cartelle e Gerarchia Granulare
+Il sistema opera su una distinzione netta tra aree di lavoro e archivio definitivo:
+2.1 Staging Area (Asset Browser / Drag & Drop)
+Una cartella esterna al Vault dove l'utente carica i file grezzi. Qui avviene l'Auto-Nesting Intelligente:
+* Livello 1 - Materiale: Se il sistema rileva una cartella radice (es. Roccia_555), crea l'entità materiale master.
+* Livello 2 - Texture Set (Variante): Sottocartelle identificate per risoluzione e formato (es. Roccia_555_4K_PNG, Roccia_555_1K_JPG).
+* Livello 3 - Texture Asset: I singoli file (Albedo, Normal, Roughness, ecc.) mappati all'interno della variante corretta.
+2.2 Il Vault di Produzione (06_KNOWLEDGE_BASE)
+Struttura interna del database documentale:
+* 01_RAW_ARCHIVE: Conserva i file originali scaricati dai fornitori (AmbientCG, Quixel, Poliigon).
+* 02_CUSTOM: Ospita i file derivati, modificati o generati internamente (es. mappe create tramite AI o tool esterni).
+* Mappings/naming_map.json: Il "cervello" delle convenzioni, aggiornato costantemente dal sistema.
+* Manifests/: File JSON individuali per ogni materiale con l'anagrafica completa (URL, Tecnica, Tags AI, Provenance).
+3. Logica RAW vs CUSTOM e Provenance
+Questa è la distinzione vitale per la qualità del dataset finale:
+Tipo Dato
+	Origine
+	Gestione Provenance
+	RAW
+	Download diretto dal Vendor.
+	Identificato come fonte primaria "as-is".
+	CUSTOM
+	Generazione interna (OpenCV, AI, Substance).
+	Referenziato obbligatoriamente al file RAW di origine (es. "Mappa X generata da Albedo RAW Y").
+	AI Process Correction: Quando l'utente inserisce una breve nota descrittiva sull'operazione manuale eseguita (es. "invertito canale G per OpenGL"), un'AI integrata corregge, espande e formalizza la descrizione nel JSON di processo per renderla leggibile ai futuri modelli di addestramento.
+4. Intelligenze di Analisi Integrate (Step-by-Step)
+Il "Boost" dell'importazione avviene attraverso tre fasi di scansione:
+1. Analisi Semantica (Vision AI - BLIP/Moondream): Carica l'Albedo e genera una "Caption" tecnica (es. "Ancient stone pavement with deep mossy cracks"). Genera tag semantici come #Medieval, #Stone, #Mossy.
+2. Analisi Cromatica e Fisica (OpenCV): Analizza i pixel per determinare il tipo di mappa indipendentemente dal nome. Verifica se una Normal è DirectX o OpenGL analizzando l'orientamento dei vettori cromatici nei canali R/G.
+3. Parser Universale (MTLX / TRES / USDC): Legge i file di setup originali. Se un file .mtlx associa un suffisso a un nodo shader, il sistema "impara" la regola e aggiorna la Knowledge Base globale.
+5. Knowledge Ingestion: Trattamento Dati Non Strutturati
+Il sistema è in grado di processare file CSV, PDF e Markdown esterni:
+* Estrazione Conoscenza: Tramite integrazione API (Gemini/Claude), i documenti vengono analizzati per estrarre dati tecnici, reference storiche o proprietà fisiche dei materiali.
+* Integrazione Dataset: I dati estratti popolano i metadati dei materiali nel Vault, aumentando la densità informativa del dataset di addestramento.
+6. Output Finale e Training Dataset
+L'obiettivo finale è la produzione di un dataset complessivo strutturato che contenga:
+* Immagini RAW e CUSTOM perfettamente catalogate.
+* Descrizioni testuali tecniche generate da AI e validate dall'utente.
+* Metadati fisici certi (risoluzione, bit-depth, color space).
+* Log di processo (Provenance) che spiegano come i dati CUSTOM sono stati derivati.
+7. System Prompts e Tool Reference
+Il sistema integra una libreria di System Prompts ottimizzati per:
+* Descrizione visiva coerente dei materiali PBR.
+* Validazione dell'integrità fisica (The Oracle).
+* Conversione standard di mercato (OpenGL to DirectX).
+Documento generato per il Technical Director del progetto DVAMOCLES SWORD™. Versione 1.0 - Protocollo SIGNUM SENTINEL.

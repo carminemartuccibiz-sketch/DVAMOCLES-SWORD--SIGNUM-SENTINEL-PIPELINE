@@ -1,0 +1,380 @@
+﻿DVAMOCLES SWORD™: SIGNUM SENTINEL
+Report di Analisi Tecnica — Per Gemini
+Data: 2026-04-24 | Analista: Claude Sonnet 4.6 Stato pipeline: DONE: 2 OK | 0 errors (baseline funzionante)
+
+
+________________
+
+
+1. PANORAMICA STATO PROGETTO
+Il progetto è in buono stato di base: la pipeline core (Ingestor → NID → Metadata → Physics → CrossMap → Decisions → Dataset) gira e processa 2 materiali senza errori.
+
+
+~5.861 righe di Python distribuite in 17 moduli. Struttura cartelle corretta per REGOLE_GLOBALI.
+
+
+________________
+
+
+2. PROBLEMI CRITICI (da risolvere prima di continuare)
+🔴 CRITICO-1 — naming_intelligence.py NON legge dalla Knowledge Base
+File: core/naming_intelligence.py Problema: Tutti i pattern (suffissi, token, packed maps) sono hardcoded direttamente nel modulo in MAP_PATTERNS: dict = { ... }. La 06_KNOWLEDGE_BASE/mappings/naming_map.json esiste e contiene gli stessi dati, ma NamingIntelligence non la legge mai.
+
+
+Violazione architetturale: REGOLE_GLOBALI dicono che la KB deve essere la single source of truth per naming. Attualmente ci sono 3 fonti concorrenti per gli stessi dati:
+
+
+1. core/naming_intelligence.py — MAP_PATTERNS hardcoded
+2. config/pipeline_config.yaml — sezione naming.vendor_patterns e naming.generic_patterns
+3. 06_KNOWLEDGE_BASE/mappings/naming_map.json — generato da knowledge_processor.py
+
+
+Fix richiesto: NamingIntelligence.__init__ deve accettare mappings_path e caricare i pattern da naming_map.json, mantenendo i valori hardcoded solo come fallback se il file non esiste.
+
+
+# Come dovrebbe essere:
+
+
+class NamingIntelligence:
+
+
+    def __init__(self, mappings_path: str = "06_KNOWLEDGE_BASE/mappings/naming_map.json"):
+
+
+        self.patterns = self._load_patterns(mappings_path) or MAP_PATTERNS
+
+
+________________
+
+
+🔴 CRITICO-2 — Duplicazione file Oracle
+Directory: oracle/ Problema: Esistono 4 file invece di 2, con formati JSON diversi:
+
+
+File
+	Dimensione
+	Usato da
+	oracle/materials_dielectrics.json
+	8.3 KB
+	physics_oracle.py ✓
+	oracle/dielectrics.json
+	9.4 KB
+	nessuno ✗
+	oracle/materials_metals.json
+	5.4 KB
+	physics_oracle.py ✓
+	oracle/metals.json
+	5.5 KB
+	nessuno ✗
+	
+
+physics_oracle.py usa glob("materials_*.json") quindi legge solo i file con prefisso materials_. I file dielectrics.json e metals.json sono morti ma creano confusione.
+
+
+Fix: Eliminare oracle/dielectrics.json e oracle/metals.json.
+
+
+________________
+
+
+🔴 CRITICO-3 — Due entry point concorrenti senza ownership chiara
+File: main.py vs Run_pipeline.py Problema: Esistono due runner principali con architetture diverse:
+
+
+* main.py (~527 righe): contiene tutto inline (SentinelPipeline class + logica), carica pipeline_config.yaml
+* Run_pipeline.py (90 righe): thin wrapper che usa core/pipeline.py
+
+
+I due file non condividono stato e potrebbero dare risultati leggermente diversi su lo stesso input. Non è chiaro quale sia il "vero" entry point per la produzione.
+
+
+Fix richiesto: Scegliere UNO come canonical. Suggerimento: Run_pipeline.py → core/pipeline.py è l'architettura più pulita. main.py può diventare legacy/deprecated.
+
+
+________________
+
+
+🔴 CRITICO-4 — import_assistant manca i campi richiesti dal nuovo spec
+File: core/import_assistant.py → metodo _write_material_info() Problema: La material_info.json generata ha schema minimale:
+
+
+{
+
+
+  "material": "Tiles_201",
+
+
+  "provider": "AmbientCG",
+
+
+  "type": "RAW",
+
+
+  "import_date": "...",
+
+
+  "source": "raw",
+
+
+  "notes": ""
+
+
+}
+
+
+Mancano completamente i campi richiesti dal nuovo spec del progetto:
+
+
+* source_url — link alla risorsa sul sito del fornitore
+* tags — tag specificati sul sito del fornitore
+* technique — Photogrammetry / Procedural / Scanned / AI Generated
+* category — categoria del materiale (stone, wood, metal...)
+* resolution_list — risoluzioni disponibili sul sito
+
+
+Fix richiesto: Estendere import_files() per accettare questi campi e scriverli in material_info.json.
+
+
+# Schema material_info.json completo:
+
+
+{
+
+
+  "material":       "Tiles_201",
+
+
+  "provider":       "AmbientCG",
+
+
+  "source_url":     "https://ambientcg.com/a/Tiles201",
+
+
+  "tags":           ["tiles", "stone", "seamless"],
+
+
+  "technique":      "Photogrammetry",
+
+
+  "category":       "stone",
+
+
+  "type":           "RAW",
+
+
+  "import_date":    "2026-04-24T...",
+
+
+  "resolution_list": ["1K", "2K", "4K", "8K"],
+
+
+  "notes":          ""
+
+
+}
+
+
+________________
+
+
+🔴 CRITICO-5 — _write_process_json crea solo UNA entry poi si ferma
+File: core/import_assistant.py, riga 294-295 Codice problematico:
+
+
+for f in files:
+
+
+    parsed = parse_process_description(description, f.name)
+
+
+    if parsed["process"] != "unknown":
+
+
+        pipeline_entries.append(entry)
+
+
+        break   # ← PROBLEMA: si ferma al primo file
+
+
+Se importi una cartella con 10 texture e descrivi "normal da albedo con materialize", il process.json conterrà solo 1 entry per il primo file che matcha. Le altre 9 texture non avranno traccia del processo.
+
+
+Fix: Rimuovere il break. Creare una entry per ogni file, filtrando solo quelli per cui la descrizione è rilevante (basandosi sul output_type inferito dal nome file).
+
+
+________________
+
+
+3. PROBLEMI STRUTTURALI (debt tecnico, non bloccanti ora)
+🟡 STRUCT-1 — Compatibilità Python 3.8
+Problema: Diversi moduli usano la sintassi list[str] e dict[str, ...] (lowercase built-in generics), disponibile solo da Python 3.9+.
+
+
+File affetti:
+
+
+* core/physics_oracle.py riga 114, 119
+* core/asset_parser.py riga 77
+* core/decision_layer.py righe 26, 48, 49
+* core/variant_generator.py riga 60
+
+
+Se il runtime di Gemini è Python 3.8, questi file crashano all'import.
+
+
+Fix: Aggiungere from __future__ import annotations in cima a ogni file affetto, oppure usare from typing import List, Dict, Tuple e la sintassi List[str].
+
+
+________________
+
+
+🟡 STRUCT-2 — 02_CUSTOM ha output senza sidecars
+Directory: 02_CUSTOM/ACG/Tiles_138/ e 02_CUSTOM/QXL/Worn_Concrete_01/ Problema: Le cartelle contengono normalized/ e downscaled/ con file processati dal Normalizer, ma non hanno material_info.json né process.json. Il Normalizer scrive direttamente lì bypassando l'ImportAssistant.
+
+
+Conseguenza: l'ingestor, se scansionasse 02_CUSTOM, non troverebbe contesto per questi file.
+
+
+Fix: Il Normalizer dovrebbe chiamare ImportAssistant._write_material_info() (o una versione semplificata) quando scrive in 02_CUSTOM.
+
+
+________________
+
+
+🟡 STRUCT-3 — variant_generator.py e asset_parser.py non integrati
+Problema: Entrambi i moduli Phase 4 esistono e sono completi (~499 e ~389 righe rispettivamente) ma non vengono chiamati da nessun pipeline runner. Sono dead code fino a quando qualcuno non li aggancia.
+
+
+In main.py i loro slot esistono (asset_slots=None) ma rimangono vuoti. In Run_pipeline.py/core/pipeline.py non sono nemmeno importati.
+
+
+________________
+
+
+🟡 STRUCT-4 — config/pipeline_config.yaml contiene naming rules duplicate
+Problema: La sezione naming.vendor_patterns e naming.generic_patterns in pipeline_config.yaml definisce pattern identici a quelli in naming_intelligence.py e naming_map.json. Chi deve fare da authority?
+
+
+Fix: Una volta risolto CRITICO-1, il config dovrebbe contenere solo parametri operativi (soglie, flag), non i dizionari di pattern. Quelli vanno solo nella KB.
+
+
+________________
+
+
+4. MIGLIORAMENTI RICHIESTI DAL NUOVO SPEC
+📋 REQ-1 — Provider come dato esplicito, non cartella
+Stato attuale: Il provider viene inferito dal nome della cartella genitore in 01_RAW_ARCHIVE/Provider/Material/.
+
+
+Nuovo requisito: Il provider deve essere inserito esplicitamente durante l'import (tramite import_assistant) e salvato in material_info.json. Non più una convenzione di cartella.
+
+
+Impatto: ingestor.py deve essere aggiornato per leggere provider da material_info.json in priorità rispetto all'inferenza da path. La logica _detect_provider() rimane come fallback.
+
+
+________________
+
+
+📋 REQ-2 — Anagrafica completa dalla fonte
+Nuovo requisito: Quando si importa una texture da un sito fornitore (AmbientCG, Quixel, etc.), devono essere salvati nell'anagrafica:
+
+
+* URL diretto alla risorsa
+* Tag dal sito
+* Tecnica di acquisizione (Photogrammetry, Procedural, Scanned)
+* Categoria materiale dal sito
+* Lista risoluzioni disponibili
+
+
+Dove va: In material_info.json, scritto da import_assistant.
+
+
+Dove lo usa: Il DatasetBuilder deve includerlo nel master.json output. Il NamingIntelligence può usare technique per selezionare regole di validazione appropriate (una texture Photogrammetry ha caratteristiche diverse da una Procedural).
+
+
+________________
+
+
+5. QUALITÀ DEL CODICE — Riepilogo Pylint
+Non esiste ancora un .pylintrc nel progetto. I principali warning pylint attesi (basati su analisi manuale) sono:
+
+
+Modulo
+	Issue attesa
+	Severity
+	core/import_assistant.py
+	break dentro loop nel _write_process_json
+	W0135
+	core/physics_oracle.py
+	list[str] (Python 3.9+ syntax)
+	E9999 su 3.8
+	core/asset_parser.py
+	list[str] (Python 3.9+ syntax)
+	E9999 su 3.8
+	core/decision_layer.py
+	list[str] (Python 3.9+ syntax)
+	E9999 su 3.8
+	core/naming_intelligence.py
+	Dizionario hardcoded 400+ righe, refactor needed
+	R0914
+	main.py
+	Classe SentinelPipeline > 400 righe, troppo grande
+	R0902
+	
+
+Fix raccomandato: Aggiungere .pylintrc con disable=R0902,R0914 per i warning di refactor non urgenti, e correggere gli E9999 che sono errori bloccanti.
+
+
+________________
+
+
+6. CHECKLIST PRIORITÀ PER GEMINI
+Fase immediata (blockers):
+* CRITICO-1: Wirare NamingIntelligence a 06_KNOWLEDGE_BASE/mappings/naming_map.json
+* CRITICO-2: Eliminare oracle/dielectrics.json e oracle/metals.json
+* CRITICO-4: Estendere import_assistant._write_material_info() con source_url, tags, technique, category, resolution_list
+* CRITICO-5: Rimuovere break da _write_process_json, gestire correttamente multi-file
+Fase breve (entro prossima sessione):
+* CRITICO-3: Deprecare main.py, scegliere Run_pipeline.py + core/pipeline.py come canonical
+* STRUCT-1: Aggiungere from __future__ import annotations ai moduli affetti
+* REQ-1 + REQ-2: Aggiornare import_assistant per anagrafica completa
+Fase media (prossima iterazione):
+* STRUCT-3: Integrare variant_generator e asset_parser nel pipeline flow
+* STRUCT-4: Consolidare naming rules in KB, rimuovere da config.yaml
+* Aggiungere .pylintrc
+* Aggiungere test unitari minimi per ingestor, naming_intelligence, import_assistant
+
+
+________________
+
+
+7. COSA FUNZIONA BENE (da non toccare)
+* core/ingestor.py v2.1 — variant detection AmbientCG-style corretta ✓
+* core/cross_map_analyzer.py — FFT tiling + damage detection robusti ✓
+* core/physics_oracle.py + core/physics_validator.py — 67 profili, 14 regole ✓
+* core/dataset_builder.py — master/raw JSON + SQLite index funzionanti ✓
+* 06_KNOWLEDGE_BASE/mappings/ — struttura corretta, dati built-in presenti ✓
+* core/knowledge_processor.py — logica parse/merge corretta ✓
+* core/normalizer.py — output in 02_CUSTOM verificato ✓
+* Pipeline end-to-end: DONE: 2 OK | 0 errors ✓
+
+
+________________
+
+
+8. DOMANDA PER IL DEVELOPER
+Prima di procedere, chiarire:
+
+
+1. Python version target: 3.8, 3.9, o 3.10+? (cambia l'approccio per STRUCT-1)
+2. Entry point canonico: main.py o Run_pipeline.py? (per CRITICO-3)
+3. UI futura: prevista come GUI desktop (PySide6/Tkinter) o web (Flask/FastAPI)? Cambia come si struttura il layer di presentazione.
+4. Scanning di 02_CUSTOM: l'ingestor deve scansionare anche 02_CUSTOM oltre a 01_RAW_ARCHIVE? Attualmente scansiona solo 01_RAW_ARCHIVE.
+
+
+________________
+
+
+
+
+Report generato da analisi completa di 17 moduli Python, 5.861 righe di codice, config YAML, KB mappings e output JSON del dataset.

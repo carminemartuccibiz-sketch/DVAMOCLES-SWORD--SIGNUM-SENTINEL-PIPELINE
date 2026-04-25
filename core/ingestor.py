@@ -1,174 +1,211 @@
 import json
-import shutil
 import logging
+import re
+import shutil
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, Any, List
 
-# Importiamo i moduli "Cervello" della pipeline
-try:
-    from core.naming_intelligence import NamingIntelligence
-    HAS_NAMING = True
-except ImportError:
-    HAS_NAMING = False
+from core.metadata_extractor import MetadataExtractor
+from core.naming_intelligence import NamingIntelligence
 
-try:
-    from core.metadata_extractor import MetadataExtractor
-    HAS_METADATA = True
-except ImportError:
-    HAS_METADATA = False
-
-# Configurazione Logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("SIGNUM_SENTINEL.INGESTOR")
 
-class Ingestor:
-    """
-    Orchestratore della Fase 2: Lettura, Estrazione Dati Fisici e Standardizzazione.
-    Prende i dati da 01_RAW e 02_CUSTOM e genera i Manifesti in 03_PROCESSED.
-    """
 
-    def __init__(self, root_dir: str = None):
+class Ingestor:
+    """Ingestione strutturata Material -> Variant -> FileRecord."""
+
+    VALID_TEXTURE_EXT = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr", ".tga"}
+    VALID_AUX_EXT = {".mtlx", ".tres", ".usdc", ".blend", ".uasset", ".json"}
+
+    def __init__(self, root_dir: str | None = None):
         self.root = Path(root_dir) if root_dir else Path(__file__).parent.parent
         self.raw_dir = self.root / "01_RAW_ARCHIVE"
         self.custom_dir = self.root / "02_CUSTOM"
         self.processed_dir = self.root / "03_PROCESSED"
-        
         self.processed_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Inizializziamo i sottomoduli se disponibili
-        self.naming_engine = NamingIntelligence() if HAS_NAMING else None
-        self.meta_engine = MetadataExtractor() if HAS_METADATA else None
+        self.naming = NamingIntelligence()
+        self.metadata = MetadataExtractor()
 
     def run_full_ingestion(self) -> Dict[str, Any]:
-        """Scansiona interi archivi per trovare materiali da processare."""
-        logger.info("Inizio Ingestione Massiva...")
-        processed_materials = 0
+        logger.info("Start ingestion RAW + CUSTOM")
+        total = 0
         errors = 0
+        manifests: List[str] = []
 
-        # Scansione RAW
-        for provider_dir in self.raw_dir.iterdir():
-            if provider_dir.is_dir():
+        for source_root, source_label in ((self.raw_dir, "RAW"), (self.custom_dir, "CUSTOM")):
+            if not source_root.exists():
+                continue
+            for provider_dir in source_root.iterdir():
+                if not provider_dir.is_dir():
+                    continue
                 for material_dir in provider_dir.iterdir():
-                    if material_dir.is_dir():
-                        if self._process_material_folder(material_dir, "01_RAW"):
-                            processed_materials += 1
-                        else:
-                            errors += 1
+                    if not material_dir.is_dir():
+                        continue
+                    try:
+                        out = self._ingest_material(provider_dir.name, material_dir, source_label)
+                        if out:
+                            manifests.append(out)
+                            total += 1
+                    except Exception:
+                        errors += 1
+                        logger.exception("Ingest failed: %s/%s", provider_dir.name, material_dir.name)
 
-        # Scansione CUSTOM
-        for provider_dir in self.custom_dir.iterdir():
-            if provider_dir.is_dir():
-                for material_dir in provider_dir.iterdir():
-                    if material_dir.is_dir():
-                        if self._process_material_folder(material_dir, "02_CUSTOM"):
-                            processed_materials += 1
-                        else:
-                            errors += 1
+        logger.info("Ingestion done. materials=%s errors=%s", total, errors)
+        return {"status": "success" if errors == 0 else "partial_success", "processed": total, "errors": errors, "manifests": manifests}
 
-        logger.info(f"Ingestione Completata. Successi: {processed_materials} | Errori/Saltati: {errors}")
-        return {"status": "success", "processed": processed_materials, "errors": errors}
+    def _ingest_material(self, provider: str, material_dir: Path, source_label: str) -> str | None:
+        material_info = self._read_json(material_dir / "material_info.json")
+        process_info = self._read_json(material_dir / "process.json")
 
-    def _process_material_folder(self, source_path: Path, source_type: str) -> bool:
-        """Elabora una singola cartella materiale, estrae i dati e genera il Master Manifest."""
-        logger.info(f"Analisi: {source_path.parent.name} / {source_path.name} [{source_type}]")
-
-        # 1. Leggi i sidecar creati dalla GUI/Importer (Fase 1)
-        material_info = self._read_json(source_path / "material_info.json")
-        process_info = self._read_json(source_path / "process.json")
-        
-        # Identità base
-        provider = material_info.get("identity", {}).get("provider", source_path.parent.name)
-        mat_name = material_info.get("identity", {}).get("material_name", source_path.name)
+        material_name = material_info.get("identity", {}).get("material_name", material_dir.name)
         tags = material_info.get("tags", [])
+        description = material_info.get("description", "")
+        profile = process_info.get("profile", "dielectric")
 
-        # Destinazione
-        target_dir = self.processed_dir / provider / mat_name
-        
-        # Se esiste già, lo puliamo per evitare conflitti (Pipeline idempotente)
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-        target_dir.mkdir(parents=True, exist_ok=True)
+        variant_map = self._collect_variants(material_dir)
+        if not variant_map:
+            logger.warning("No variants detected in %s", material_dir)
+            return None
 
-        files_data = []
+        output_dir = self.processed_dir / provider / material_name
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        variants_payload: Dict[str, Any] = {}
         coverage = set()
-        
-        # Estensioni supportate
-        valid_exts = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr", ".tga", ".uasset"}
-        
-        image_files = [f for f in source_path.iterdir() if f.is_file() and f.suffix.lower() in valid_exts]
-        if not image_files:
-            logger.warning(f"Nessun file valido trovato in {source_path}. Salto.")
-            return False
+        total_files = 0
 
-        # 2. Elaborazione File per File (The Brain)
-        for f in image_files:
-            target_file = target_dir / f.name
-            shutil.copy2(f, target_file)
-
-            file_record = {
-                "original_name": f.name,
-                "map_type": "unknown",
-                "confidence": 0.0,
-                "specs": {},
-                "software_origin": "Unknown"
+        for variant_name, files in variant_map.items():
+            variant_out = output_dir / "variants" / variant_name
+            variant_out.mkdir(parents=True, exist_ok=True)
+            payload_files = []
+            for src in files:
+                dst = variant_out / src.name
+                if src.resolve() != dst.resolve():
+                    shutil.copy2(src, dst)
+                detected = self.naming.classify_filename(src.name)
+                meta = self.metadata.extract_all(dst)
+                if detected.map_type != "unknown":
+                    coverage.add(detected.map_type)
+                payload_files.append(
+                    {
+                        "original_filename": src.name,
+                        "path": str(dst),
+                        "map_type": detected.map_type,
+                        "confidence": detected.confidence,
+                        "convention": detected.convention,
+                        "specs": meta.get("image_specs", {}),
+                        "software_origin": meta.get("software_origin", "Unknown"),
+                    }
+                )
+                total_files += 1
+            variants_payload[variant_name] = {
+                "format": self._infer_format(files),
+                "resolution": self._infer_resolution(variant_name, files),
+                "files": payload_files,
             }
 
-            # Naming Intelligence (Capisce cos'è dal nome)
-            if self.naming_engine:
-                ident = self.naming_engine.classify_filename(f.name)
-                file_record["map_type"] = ident.map_type
-                file_record["confidence"] = ident.confidence
-                if ident.map_type != "unknown":
-                    coverage.add(ident.map_type)
-            
-            # Metadata Extractor (Legge i pixel e gli EXIF)
-            if self.meta_engine and f.suffix.lower() != ".uasset":
-                tech_data = self.meta_engine.extract_all(f)
-                file_record["specs"] = tech_data.get("image_specs", {})
-                file_record["software_origin"] = tech_data.get("software_origin", "Unknown")
-
-            files_data.append(file_record)
-
-        # 3. Costruzione del Master Manifest (dataset-ready)
         manifest = {
             "metadata": {
-                "material_name": mat_name,
+                "material_name": material_name,
                 "provider": provider,
-                "source_origin": source_type,
-                "tags": tags
+                "source_origin": source_label,
+                "tags": tags,
+                "description": description,
+                "profile": profile,
+                "source_path": str(material_dir),
             },
             "coverage": {
-                "maps_found": list(coverage),
-                "is_pbr_complete": self._check_pbr_completeness(coverage)
+                "maps_found": sorted(list(coverage)),
+                "is_pbr_complete": self._is_pbr_complete(coverage),
             },
-            "derivation": process_info if process_info else {"is_raw": True},
-            "files": files_data
+            "derivation": process_info if process_info else {"is_raw": source_label == "RAW"},
+            "variants": variants_payload,
+            "stats": {"variant_count": len(variants_payload), "file_count": total_files},
         }
 
-        # Salvataggio Manifest
-        with open(target_dir / "manifest.json", "w", encoding="utf-8") as mj:
-            json.dump(manifest, mj, indent=4, ensure_ascii=False)
+        manifest_path = output_dir / "manifest.json"
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=4, ensure_ascii=False)
+        logger.info("Manifest generated: %s", manifest_path)
+        return str(manifest_path)
 
-        logger.debug(f"Manifest generato per {mat_name}.")
-        return True
+    def _collect_variants(self, material_dir: Path) -> Dict[str, List[Path]]:
+        """
+        Auto-nesting:
+        - cartelle variante (Rock_055_1K_PNG)
+        - struttura flat (deduce da filename)
+        """
+        variants: Dict[str, List[Path]] = {}
+        for child in material_dir.iterdir():
+            if child.is_dir():
+                key = self._variant_name_from_folder(child.name)
+                textures = [f for f in child.iterdir() if f.is_file() and f.suffix.lower() in self.VALID_TEXTURE_EXT]
+                if textures:
+                    variants.setdefault(key, []).extend(sorted(textures))
 
-    def _check_pbr_completeness(self, coverage: set) -> bool:
-        """Verifica se il materiale ha le mappe base minime."""
-        core_maps = {"albedo", "normal", "roughness"}
-        # Se l'intersezione contiene tutti gli elementi di core_maps
-        return core_maps.issubset(coverage)
+        if not variants:
+            for f in material_dir.iterdir():
+                if not f.is_file() or f.suffix.lower() not in self.VALID_TEXTURE_EXT:
+                    continue
+                key = self._variant_name_from_filename(f.name)
+                variants.setdefault(key, []).append(f)
 
-    def _read_json(self, path: Path) -> Dict[str, Any]:
-        if path.exists():
-            try:
-                with open(path, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                pass
-        return {}
+        return variants
+
+    @staticmethod
+    def _variant_name_from_folder(folder_name: str) -> str:
+        normalized = folder_name.replace("-", "_")
+        m = re.search(r"(\d+K)_(PNG|JPG|JPEG|TIF|TIFF|EXR)", normalized, re.IGNORECASE)
+        if not m:
+            m = re.search(r"(\d+K)[_\-]?(PNG|JPG|JPEG|TIF|TIFF|EXR)", normalized, re.IGNORECASE)
+        if m:
+            return f"{m.group(1).upper()}_{m.group(2).upper().replace('JPEG', 'JPG').replace('TIFF', 'TIF')}"
+        return "SOURCE"
+
+    @staticmethod
+    def _variant_name_from_filename(filename: str) -> str:
+        stem = Path(filename).stem.replace("-", "_")
+        m = re.search(r"(\d+K)_(PNG|JPG|JPEG|TIF|TIFF|EXR)", stem, re.IGNORECASE)
+        if m:
+            return f"{m.group(1).upper()}_{m.group(2).upper().replace('JPEG', 'JPG').replace('TIFF', 'TIF')}"
+        return "SOURCE"
+
+    @staticmethod
+    def _infer_format(files: List[Path]) -> str:
+        if not files:
+            return "UNKNOWN"
+        ext = files[0].suffix.lower().replace(".", "").upper()
+        return "JPG" if ext == "JPEG" else "TIF" if ext == "TIFF" else ext
+
+    @staticmethod
+    def _infer_resolution(variant_name: str, files: List[Path]) -> str:
+        m = re.search(r"(\d+K)", variant_name, re.IGNORECASE)
+        if m:
+            return m.group(1).upper()
+        if files:
+            meta_tag = re.search(r"(1K|2K|4K|8K|16K)", files[0].name, re.IGNORECASE)
+            if meta_tag:
+                return meta_tag.group(1).upper()
+        return "UNKNOWN"
+
+    @staticmethod
+    def _is_pbr_complete(coverage: set) -> bool:
+        return {"albedo", "normal", "roughness"}.issubset(coverage)
+
+    @staticmethod
+    def _read_json(path: Path) -> Dict[str, Any]:
+        if not path.exists():
+            return {}
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
 
 
-# CLI di test rapido
 if __name__ == "__main__":
     ingestor = Ingestor()
-    ingestor.run_full_ingestion()
+    print(json.dumps(ingestor.run_full_ingestion(), indent=2))
