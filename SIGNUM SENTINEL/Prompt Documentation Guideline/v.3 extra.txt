@@ -1,0 +1,64 @@
+Basandoti sulle specifiche tecniche della versione **v3.0** e sul framework strategico di **DVAMOCLES SWORD™**, ecco l'espansione dell'architettura richiesta per integrare pipeline GPU, database a grafi e sistemi di ranking AI.
+
+---
+
+### 1. GPU Pipeline (CUDA / PyTorch Ops)
+[cite_start]L'integrazione della GPU sposta il carico computazionale dai moduli deterministici a quelli di intelligenza artificiale locale, ottimizzando l'elaborazione parallela delle texture[cite: 8].
+
+* [cite_start]**Runtime AI Stack**: Utilizzo di **PyTorch** come backend primario per l'esecuzione di modelli Vision (Transformers)[cite: 8].
+* **Moduli accelerati via CUDA**:
+    * [cite_start]**P-ID Mask Engine**: Utilizzo di **Meta SAM 2** per la segmentazione semantica rapida delle zone fisiche nell'Albedo[cite: 8].
+    * [cite_start]**FFT & Cross-Map Analysis**: Implementazione di operazioni matriciali via GPU (tramite `cupy` o kernel CUDA personalizzati) per il calcolo della *seamlessness* e delle correlazioni spaziali tra mappe[cite: 8].
+    * [cite_start]**Inference Local-First**: Integrazione con **Ollama** per modelli LLaVA/Florence-2, garantendo che i snapshot delle texture siano processati in VRAM per descrizioni tecniche ultra-veloci[cite: 8, 12].
+* [cite_start]**Memory Gating**: Sistema di isolamento degli "AI Hooks" che riceve snapshot a bassa risoluzione (Proxy System) per non saturare la VRAM durante il processing batch di texture 4K/8K[cite: 22].
+
+---
+
+### 2. Graph Database per Correlazioni
+[cite_start]Sostituzione o affiancamento dell'attuale indice SQLite con un **Graph Database (es. Memgraph o Neo4j)** per mappare la "conoscenza dei materiali"[cite: 8].
+
+* **Nodi Core**:
+    * [cite_start]`Material`: Identità univoca del materiale (es. Tiles_138)[cite: 17].
+    * [cite_start]`Texture`: Singoli file con metadati tecnici (risoluzione, bit-depth)[cite: 17].
+    * [cite_start]`Provider`: Sorgente del dato (AmbientCG, Quixel, Poliigon)[cite: 17].
+    * [cite_start]`PhysicsNode`: Profili dal **Physics Oracle** (es. Range Albedo Metalli)[cite: 7, 8].
+* **Relazioni (Edges)**:
+    * [cite_start]`CORRELATES_WITH`: Tra Albedo e Roughness (score di coerenza fisica)[cite: 19].
+    * [cite_start]`SIMILAR_TO`: Basata su **pHash percettivo** per identificare duplicati tra diversi provider[cite: 8].
+    * [cite_start]`DERIVED_FROM`: Tracciamento completo della discendenza dei file in `02_CUSTOM/` (es. Normal generata da Height via Sobel)[cite: 18, 22].
+
+---
+
+### 3. AI Ranking Qualità Texture
+[cite_start]Un sistema di scoring multi-fattore che classifica ogni asset nel dataset in base alla sua fedeltà PBR e integrità tecnica[cite: 7].
+
+* [cite_start]**PBR Compliance Score**: Calcolato confrontando i valori medi della texture con i range validati nel **Physics Oracle**[cite: 7, 19].
+* **Metriche Tecniche**:
+    * [cite_start]**SSIM/PSNR**: Per valutare la perdita di qualità tra risoluzioni 1K e 4K (dataset di super-resolution)[cite: 8].
+    * [cite_start]**FFT Tiling Analysis**: Assegnazione di un punteggio di "seamlessness" reale, rilevando artefatti di ripetizione o cuciture visibili[cite: 8].
+* [cite_start]**AI Vision Ranking**: Modelli Vision classificano la "complessità superficiale" e rilevano danni (scratches, oxidation) per arricchire il tag `damage_fingerprint`[cite: 6].
+
+---
+
+### 4. Auto Material Reconstruction: Architettura Completa
+[cite_start]Il processo trasforma texture non strutturate in materiali intelligenti pronti per il runtime DVAMOCLES[cite: 22].
+
+#### Layer-by-Layer Flow:
+1.  **Layer 0: Staging & Gating (Import Assistant)**
+    * [cite_start]Crea una staging area temporanea con UUID[cite: 22].
+    * [cite_start]Esegue la **Naming Intelligence (NID)** per mappare i file ai tipi di mappa PBR leggendo dalla Knowledge Base[cite: 22].
+    * [cite_start]Estrae i metadati tecnici tramite ExifTool[cite: 22].
+2.  **Layer 1: Deterministic Analysis (Ingestor & Generator)**
+    * [cite_start]Raggruppa i file in set di materiali e varianti (1K, 2K, 4K)[cite: 22].
+    * [cite_start]Genera mappe mancanti (es. Normal da Height) registrando ogni operazione nel file `process.json`[cite: 18, 22].
+3.  **Layer 2: Material Physics Engine (Validator & Oracle)**
+    * [cite_start]Confronta il materiale con i 67+ profili fisici del **Physics Oracle**[cite: 8].
+    * [cite_start]Produce il `physics_validation.json` con eventuali violazioni (es. Albedo troppo scuro per un metallo)[cite: 19].
+4.  **Layer 3: Semantic Enrichment (AI Vision)**
+    * [cite_start]Generazione di P-ID Mask tramite SAM 2 per isolare materiali diversi nello stesso set[cite: 8].
+    * [cite_start]Captioning automatico dei dettagli (micro-noise, usura) tramite LLaVA[cite: 12].
+5.  **Layer 4: Dataset Builder & Export**
+    * [cite_start]Unifica tutto nel **Master JSON** (runtime-light) e **Raw JSON** (training-complete)[cite: 22].
+    * [cite_start]Esporta pacchetti pronti per UE5, Unity o Godot seguendo il formato "The Definitive 5"[cite: 22].
+
+[cite_start]**Integrazione UI**: L'utente interagisce tramite una **Graph View** node-based dove può correggere manualmente i tipi di mappa o approvare i suggerimenti dell'AI durante la fase di gating[cite: 22].
