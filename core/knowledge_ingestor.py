@@ -1,8 +1,10 @@
 import csv
 import json
 import logging
+import shutil
 from pathlib import Path
 from typing import Dict, Any, List
+from utils.runtime_paths import get_app_root
 
 logger = logging.getLogger("SIGNUM_SENTINEL.KNOWLEDGE_INGESTOR")
 
@@ -14,7 +16,7 @@ class KnowledgeIngestor:
     """
 
     def __init__(self, root_dir: str | None = None):
-        self.root = Path(root_dir) if root_dir else Path(__file__).parent.parent
+        self.root = Path(root_dir).resolve() if root_dir else get_app_root()
         self.kb_sources = self.root / "06_KNOWLEDGE_BASE" / "sources"
         self.kb_index = self.root / "06_KNOWLEDGE_BASE" / "kb_index.json"
         self.kb_sources.mkdir(parents=True, exist_ok=True)
@@ -31,14 +33,20 @@ class KnowledgeIngestor:
                 skipped += 1
                 continue
             try:
+                kb_rel_path = self._copy_to_kb_sources(fp)
                 text = self._extract_text(fp)
                 if not text.strip():
+                    skipped += 1
+                    continue
+                if self._doc_exists(index, fp):
                     skipped += 1
                     continue
                 rec = {
                     "name": fp.name,
                     "source_path": str(fp),
+                    "kb_path": kb_rel_path,
                     "type": fp.suffix.lower().lstrip("."),
+                    "size_bytes": fp.stat().st_size,
                     "tokens": self._tokenize(text),
                     "preview": text[:500],
                 }
@@ -49,6 +57,15 @@ class KnowledgeIngestor:
 
         self._save_index(index)
         return {"added": added, "skipped": skipped, "errors": errors}
+
+    def _copy_to_kb_sources(self, source: Path) -> str:
+        ext = source.suffix.lower().lstrip(".") or "misc"
+        target_dir = self.kb_sources / ext
+        target_dir.mkdir(parents=True, exist_ok=True)
+        target = target_dir / source.name
+        if not target.exists():
+            shutil.copy2(source, target)
+        return str(target.relative_to(self.root))
 
     def _extract_text(self, path: Path) -> str:
         suffix = path.suffix.lower()
@@ -101,3 +118,11 @@ class KnowledgeIngestor:
         self.kb_index.parent.mkdir(parents=True, exist_ok=True)
         with open(self.kb_index, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
+
+    @staticmethod
+    def _doc_exists(index: Dict[str, Any], source_path: Path) -> bool:
+        src = str(source_path)
+        for rec in index.get("documents", []):
+            if rec.get("source_path") == src:
+                return True
+        return False

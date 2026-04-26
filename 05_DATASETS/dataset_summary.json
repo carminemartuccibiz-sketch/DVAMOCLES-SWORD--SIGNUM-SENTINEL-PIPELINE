@@ -1,0 +1,17 @@
+{
+  "status": "ok",
+  "total_variants": 0,
+  "providers": [],
+  "pbr_complete_variants": 0,
+  "segmented_variants": 0,
+  "coverage_ratio": 0.0,
+  "provider_distribution": {},
+  "imbalance_ratio": 0.0,
+  "exports": {
+    "cataloging": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\cataloging_dataset.jsonl",
+    "super_resolution": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\super_resolution_dataset.jsonl",
+    "artifact_fix": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\artifact_fix_dataset.jsonl",
+    "missing_map_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\missing_map_generation_dataset.jsonl",
+    "texture_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\texture_generation_dataset.jsonl"
+  }
+}

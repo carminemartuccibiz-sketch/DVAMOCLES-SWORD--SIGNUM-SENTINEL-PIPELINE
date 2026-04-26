@@ -1,13 +1,53 @@
 {
     "map_patterns": {
-        "albedo": ["_albedo", "_basecolor", "_base_color", "_color", "_diffuse"],
-        "normal": ["_normal", "_nrm", "_nor", "_normalgl", "_normal_gl", "_normaldx", "_normal_dx"],
-        "roughness": ["_roughness", "_rough", "_rgh"],
-        "metallic": ["_metallic", "_metalness", "_metal", "_mtl"],
-        "ao": ["_ao", "_occlusion", "_ambientocclusion", "_ambient_occlusion"],
-        "height": ["_height", "_disp", "_displacement"],
-        "opacity": ["_opacity", "_alpha", "_mask"],
-        "emissive": ["_emissive", "_emit", "_emission"]
+        "albedo": [
+            "_albedo",
+            "_basecolor",
+            "_base_color",
+            "_color",
+            "_diffuse"
+        ],
+        "normal": [
+            "_normal",
+            "_nrm",
+            "_nor",
+            "_normalgl",
+            "_normal_gl",
+            "_normaldx",
+            "_normal_dx"
+        ],
+        "roughness": [
+            "_roughness",
+            "_rough",
+            "_rgh"
+        ],
+        "metallic": [
+            "_metallic",
+            "_metalness",
+            "_metal",
+            "_mtl"
+        ],
+        "ao": [
+            "_ao",
+            "_occlusion",
+            "_ambientocclusion",
+            "_ambient_occlusion"
+        ],
+        "height": [
+            "_height",
+            "_disp",
+            "_displacement"
+        ],
+        "opacity": [
+            "_opacity",
+            "_alpha",
+            "_mask"
+        ],
+        "emissive": [
+            "_emissive",
+            "_emit",
+            "_emission"
+        ]
     },
     "role_aliases": {
         "base_color": "albedo",
@@ -25,6 +65,20 @@
         "occlusion": "ao",
         "height": "height",
         "displacement": "height"
+    },
+    "normal_convention_patterns": {
+        "dx": [
+            "normal_dx",
+            "normaldx",
+            "ndx",
+            "directx"
+        ],
+        "gl": [
+            "normal_gl",
+            "normalgl",
+            "ngl",
+            "opengl"
+        ]
     },
     "format_aliases": {
         ".jpg": "JPG",

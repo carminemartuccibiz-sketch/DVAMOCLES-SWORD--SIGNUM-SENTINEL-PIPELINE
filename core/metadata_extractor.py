@@ -4,6 +4,7 @@ import subprocess
 import shutil
 from pathlib import Path
 from typing import Dict, Any, Optional, List
+from utils.runtime_paths import resolve_resource, get_app_root
 
 try:
     import cv2
@@ -16,10 +17,27 @@ logger = logging.getLogger("SIGNUM_SENTINEL.METADATA_EXTRACTOR")
 class MetadataExtractor:
     """Analizzatore forense texture (ExifTool + OpenCV fallback)."""
 
-    def __init__(self):
-        self.exiftool_path = shutil.which("exiftool")
+    def __init__(self, root_dir: Optional[Path] = None):
+        self.root = Path(root_dir).resolve() if root_dir else get_app_root()
+        self.exiftool_path = self._resolve_exiftool_path()
         if not self.exiftool_path:
             logger.warning("ExifTool non trovato nel PATH. Fallback OpenCV in uso.")
+
+    def _resolve_exiftool_path(self) -> Optional[str]:
+        """
+        Priorita':
+        1) exiftool.exe portabile nel progetto
+        2) exiftool nel PATH
+        """
+        candidates = [
+            resolve_resource("exiftool.exe"),
+            resolve_resource("exiftool_files/exiftool.exe"),
+            resolve_resource("exiftool_files/exiftool(-k).exe"),
+        ]
+        for c in candidates:
+            if c.exists() and c.is_file():
+                return str(c)
+        return shutil.which("exiftool")
 
     def extract_all(self, file_path: Path) -> Dict[str, Any]:
         if not file_path.exists(): return {}

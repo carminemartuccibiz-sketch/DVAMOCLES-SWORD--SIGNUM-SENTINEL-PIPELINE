@@ -1,58 +1,109 @@
-# 🗡️ DVAMOCLES SWORD™ – SIGNUM SENTINEL
-**Material Forge Studio® - Master Pipeline & AI Training Forge**
+# DVAMOCLES SWORD - SIGNUM SENTINEL
 
-Questa è una pipeline Python production-ready progettata per l'acquisizione, l'analisi profonda, la generazione procedurale e la costruzione di dataset per materiali PBR (Physically Based Rendering). 
-Non è un semplice convertitore di texture: è una fornace automatizzata per addestrare modelli AI comprendendo il "DNA fisico" e i processi di creazione dei materiali.
+Pipeline Python per ingestione PBR, validazione fisica, arricchimento AI e costruzione dataset training.
 
----
+Obiettivo: trasformare asset texture eterogenei in una base dati coerente, tracciabile e training-ready, mantenendo distinzione rigorosa tra file RAW e CUSTOM.
 
-## 📁 ARCHITETTURA DIRECTORY (STRICT RIGOR)
-Il sistema è diviso in aree di competenza isolate. Le regole di Lettura/Scrittura sono ferree.
+## Scopo del progetto
 
-* `01_RAW_ARCHIVE/`  → Dati originali "Puri" scaricati dai provider (es. Quixel, AmbientCG). **(Solo Lettura, MAI modificare)**
-* `02_CUSTOM/`       → Dati generati o modificati dall'utente (es. scan, output di Substance, file `.uasset` di Unreal Engine). Include i manifest `process.json`. **(Input/Lettura)**
-* `03_PROCESSED/`    → Output intermedio standardizzato. File raggruppati per risoluzione, analizzati e con manifest JSON associati. **(Scrittura Pipeline)**
-* `04_DATASET/`      → Output formattato per il training AI (JSON enormi, mapping, split train/test). **(Scrittura Pipeline)**
-* `05_OUTPUT/`       → Export finali ottimizzati per specifici Engine (Unreal, Unity). **(Scrittura Pipeline)**
-* `06_KNOWLEDGE_BASE/`→ "L'Oracolo". Contiene PDF, Markdown e CSV processati che dettano le regole PBR (es. "L'Albedo del carbone è 30-40").
-* `core/`            → Cuore logico in Python (Importer, Ingestor, Naming, Metadata).
-* `utils/`           → Script helper (Seamless ops, OpenCV wrappers).
-* `ai/`              → Moduli di intelligenza artificiale (Vision, SAM, Image2Text).
-* `oracle/`          → Moduli per la validazione contro le regole PBR.
-* `logs/`            → File di log di sistema e storici.
+- ingestione di materiali PBR da cartelle drag-and-drop o import guidato GUI
+- classificazione mappe e varianti (`albedo`, `normal`, `roughness`, etc.) con naming intelligence
+- estrazione metadati tecnici (risoluzione, bit depth, color space) via ExifTool/OpenCV
+- validazione fisica con regole centralizzate nella Knowledge Base
+- generazione manifest JSON completi per catalogazione e dataset AI
+- tracciamento provenance (`source_raw`, `process`) per ogni asset CUSTOM
 
----
+## Architettura directory
 
-## 🔁 THE AI FORGE PIPELINE (LE 6 FASI)
+- `01_RAW_ARCHIVE/`: archivio originale, fonte primaria non alterata
+- `02_CUSTOM/`: derivati e trasformazioni custom
+- `03_PROCESSED/`: output intermedi di pipeline
+- `04_DATASET/`: dataset finali per training
+- `05_OUTPUT/`: export finali
+- `06_KNOWLEDGE_BASE/`: regole, mapping, manifest, fonti di conoscenza
+- `core/`: moduli principali del sistema
+- `ai/`: moduli AI addizionali
+- `utils/`: helper tecnici
+- `config/`, `logs/`, `temp/`: configurazione, log, runtime
+- `Z_DEV/`: contesto e documentazione storica/operativa
 
-### 🟩 FASE 1: ACQUISITION & CONTEXT (The Gatekeeper)
-* **Modulo:** `core/import_assistant.py` (L'Importer)
-* **Azione:** Riceve interi set di texture (incluse multi-risoluzioni 1K, 2K, 4K). Smista tra RAW e CUSTOM in base all'input umano. Salva il contesto di creazione (tag, provider, logica di derivazione).
+## Moduli core principali
 
-### 🟦 FASE 2: TECHNICAL EXTRACTION (The Brain)
-* **Moduli:** `core/ingestor.py`, `core/naming_intelligence.py`, `core/metadata_extractor.py`
-* **Azione:** Raggruppa i file per materiale e risoluzione. Usa regex per capire il tipo di mappa ed estrae il DNA tecnico con ExifTool/OpenCV (Bit Depth, Spazio Colore, Profilo ICC). Crea il `manifest.json`.
+- `main_gui.py`: entrypoint GUI (CustomTkinter + TkinterDnD)
+- `core/import_assistant.py`: orchestrazione import, auto-detect, scrittura manifest/process
+- `core/naming_intelligence.py`: naming map-type guidato da KB JSON
+- `core/metadata_extractor.py`: metadata extraction (ExifTool portabile + fallback OpenCV)
+- `core/pbr_validator.py`: validator unificato con regole PBR da JSON
+- `core/knowledge_ingestor.py`: ingestione conoscenza esterna in `06_KNOWLEDGE_BASE`
 
-### 🟧 FASE 3: PHYSICAL VALIDATION & GENERATION (The Forger)
-* **Moduli:** `core/validator.py`, `core/map_generator.py`
-* **Azione:** Verifica le mancanze. Se manca una mappa (es. Height) e l'utente lo richiede, usa algoritmi/AI (es. DeepBump, img2texture) per generarla a partire da altre mappe. 
-* **Focus AI:** Registra meticolosamente cosa è "Reale" e cosa è "Generato" per insegnare all'AI a cogliere le differenze.
+## Single Source of Truth
 
-### 🟨 FASE 4: VISUAL ENRICHMENT (L'Occhio dell'AI)
-* **Moduli:** `ai/vision_describer.py`, `ai/mask_generator.py`
-* **Azione:** Modelli Vision-to-Text descrivono semanticamente il materiale. Meta SAM (Segment Anything) crea PID Masks (maschere di segmentazione) per distinguere materiali diversi nella stessa texture (es. mattone vs muschio).
+Le regole non devono essere hardcoded nei moduli Python:
 
-### 🟪 FASE 5: THE ORACLE (Knowledge Integration)
-* **Moduli:** `core/knowledge_processor.py`, `oracle/pbr_judge.py`
-* **Azione:** Mastica documenti complessi dalla `06_KNOWLEDGE_BASE` e li trasforma in "Ground Truth" matematiche contro cui il Validator può testare le texture.
+- naming patterns: `06_KNOWLEDGE_BASE/mappings/naming_map.json`
+- regole fisiche: `06_KNOWLEDGE_BASE/rules/pbr_rules.json`
+- indicizzazione conoscenza: `06_KNOWLEDGE_BASE/kb_index.json`
+- manifest materiali: `06_KNOWLEDGE_BASE/Manifests/*_manifest.json`
 
-### ⬛ FASE 6: THE DATASET BUILDER
-* **Modulo:** `core/dataset_builder.py`
-* **Azione:** Collassa le Fasi 1-5 in un super-dataset dentro `04_DATASET`, pronto per l'addestramento o il fine-tuning di modelli AI custom.
+## Flusso operativo
 
----
+1. import cartelle/file da GUI in staging
+2. auto-detect file (metadata + visual check + naming intelligence + caption AI opzionale)
+3. auto-sort nel vault materiali/varianti
+4. editing metadati in inspector (material/folder/file)
+5. `EXECUTE FORGE` per import definitivo in RAW/CUSTOM
+6. scrittura `material_info.json`, `process.json` e manifest KB
 
-## ⚙️ REGOLE DI SVILUPPO
-1. **Fallback Sicuri:** Se un tool AI o una libreria (es. ExifTool, OpenCV, Ollama) fallisce, il sistema non deve crashare. Deve loggare l'errore e usare parametri di default (es. `resolution: unknown`).
-2. **Niente Codice Stub:** Tutto il codice Python deve essere produzione-pronto e strutturato ad oggetti.
-3. **Tracciabilità:** Qualsiasi azione trasformativa su un'immagine (es. resize, normalizzazione colore) deve essere scritta nel `manifest.json`.
+## RAW vs CUSTOM (contratto dati)
+
+- RAW: file originali vendor/user non trasformati
+- CUSTOM: file generati/modificati da pipeline o tool esterni
+- per ogni file CUSTOM sono obbligatori:
+  - `source_raw`
+  - `process`
+
+Questo e' fondamentale per training supervisionato e audit della provenance.
+
+## Ingestione knowledge base esterna
+
+Per importare fonti testuali/CSV nel catalogo KB:
+
+```python
+from core.knowledge_ingestor import KnowledgeIngestor
+
+files = [
+    r"c:/Users/Carmine/Desktop/DATI GREZZI PER TRAINING/PBR_Master_Knowledge_Base_Part1.md",
+    r"c:/Users/Carmine/Desktop/DATI GREZZI PER TRAINING/PBR_MKB_ParteA.md",
+    r"c:/Users/Carmine/Desktop/DATI GREZZI PER TRAINING/PBR_MKB_ParteB.md",
+    r"c:/Users/Carmine/Desktop/DATI GREZZI PER TRAINING/SpectralDB - spectraldb.csv",
+    r"c:/Users/Carmine/Desktop/DATI GREZZI PER TRAINING/Thunderbit_4566a5_20260411_173917.csv",
+]
+
+print(KnowledgeIngestor().ingest_files(files))
+```
+
+Output:
+
+- copia sorgenti in `06_KNOWLEDGE_BASE/sources/<ext>/`
+- indice documenti in `06_KNOWLEDGE_BASE/kb_index.json`
+- tokenizzazione base per supporto catalogazione e query
+
+## Toolchain e dipendenze
+
+- Python 3.12 (consigliato)
+- GUI: `customtkinter`, `tkinterdnd2`
+- imaging: `Pillow`, `opencv-python`
+- AI vision: `torch`, `transformers` (BLIP)
+- sistema: `psutil`, `gputil`
+- metadata: ExifTool (portabile supportato)
+
+Script utili:
+
+- `install_dependencies.bat`: install/update dipendenze (venv-aware, fallback torch CPU)
+- `START_FORGE.bat`: launcher GUI
+
+## Note operative
+
+- se l'AI non e' attiva, il sistema resta operativo in modalita' metadata+naming+opencv
+- se ExifTool non e' disponibile, viene usato fallback OpenCV/Pillow
+- i file di contesto e guida sono conservati in `Z_DEV/contesto e co ai/`

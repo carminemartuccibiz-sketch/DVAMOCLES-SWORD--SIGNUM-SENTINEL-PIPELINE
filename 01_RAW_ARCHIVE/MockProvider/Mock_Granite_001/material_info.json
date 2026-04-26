@@ -1,0 +1,21 @@
+{
+    "schema_version": "1.0.0",
+    "identity": {
+        "material_name": "Mock_Granite_001",
+        "provider": "MockProvider",
+        "asset_type": "RAW",
+        "source": "GUI_IMPORT",
+        "url": "",
+        "technique": ""
+    },
+    "description": "",
+    "tags": [
+        "API_IMPORT"
+    ],
+    "variants": {
+        "4K_PNG": {
+            "file_count": 0,
+            "files": []
+        }
+    }
+}

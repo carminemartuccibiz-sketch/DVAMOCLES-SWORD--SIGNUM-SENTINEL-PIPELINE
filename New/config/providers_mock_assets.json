@@ -1,0 +1,49 @@
+{
+    "assets": [
+        {
+            "provider": "MockProvider",
+            "material_name": "Mock_Granite_001",
+            "variant": "4K_PNG",
+            "file_name": "Mock_Granite_001_albedo.png",
+            "file_url": "mock://provider/mock_granite_001/albedo",
+            "map_type": "ALBEDO",
+            "format": "PNG",
+            "resolution": "4K",
+            "tech_res": "4096x4096",
+            "color_space": "sRGB",
+            "bit_depth": "8-bit",
+            "endpoint": "mock://assets?material=mock_granite_001",
+            "source_raw": "mock_granite_001"
+        },
+        {
+            "provider": "MockProvider",
+            "material_name": "Mock_Granite_001",
+            "variant": "4K_PNG",
+            "file_name": "Mock_Granite_001_normal_gl.png",
+            "file_url": "mock://provider/mock_granite_001/normal_gl",
+            "map_type": "NORMAL_GL",
+            "format": "PNG",
+            "resolution": "4K",
+            "tech_res": "4096x4096",
+            "color_space": "Linear",
+            "bit_depth": "8-bit",
+            "endpoint": "mock://assets?material=mock_granite_001",
+            "source_raw": "mock_granite_001"
+        },
+        {
+            "provider": "MockProvider",
+            "material_name": "Mock_Granite_001",
+            "variant": "4K_PNG",
+            "file_name": "Mock_Granite_001_roughness.png",
+            "file_url": "mock://provider/mock_granite_001/roughness",
+            "map_type": "ROUGHNESS",
+            "format": "PNG",
+            "resolution": "4K",
+            "tech_res": "4096x4096",
+            "color_space": "Linear",
+            "bit_depth": "8-bit",
+            "endpoint": "mock://assets?material=mock_granite_001",
+            "source_raw": "mock_granite_001"
+        }
+    ]
+}

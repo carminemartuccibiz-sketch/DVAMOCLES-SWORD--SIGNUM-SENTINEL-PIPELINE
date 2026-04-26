@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "timestamp_utc": "2026-04-25T22:26:40.528843+00:00",
+  "stages": {
+    "import": {
+      "status": "partial_success",
+      "processed_materials": 2,
+      "processed_files": 0,
+      "skipped_files": 0,
+      "errors": [
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Mock_Granite_001/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\MockProvider\\Mock_Granite_001\\variants\\4K_PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_1K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-JPG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists",
+        "Tiles138/: Destination path 'C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\01_RAW_ARCHIVE\\Tiles138\\variants\\Tiles138_2K-PNG\\.' already exists"
+      ]
+    },
+    "ingestion": {
+      "status": "success",
+      "processed": 0,
+      "errors": 0,
+      "manifests": [],
+      "quality_gates": {
+        "status": "ok",
+        "errors": [],
+        "warnings": [
+          "_Tiles138_manifest.json: `identity.provider` missing",
+          "Tiles138_manifest.json: `identity.provider` missing"
+        ]
+      }
+    },
+    "analysis_benchmark": {
+      "status": "ok",
+      "materials_analyzed": 0,
+      "avg_pbr_completeness": 0.0,
+      "avg_generated_similarity": 0.0,
+      "map_type_scores": {},
+      "materials": [],
+      "output_path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\06_KNOWLEDGE_BASE\\reports\\analysis_benchmark_report.json"
+    },
+    "segmentation": {
+      "status": "ok",
+      "masks_generated": 0,
+      "variants": []
+    },
+    "dataset_builder": {
+      "status": "ok",
+      "total_variants": 0,
+      "providers": [],
+      "pbr_complete_variants": 0,
+      "segmented_variants": 0,
+      "coverage_ratio": 0.0,
+      "provider_distribution": {},
+      "imbalance_ratio": 0.0,
+      "exports": {
+        "cataloging": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\cataloging_dataset.jsonl",
+        "super_resolution": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\super_resolution_dataset.jsonl",
+        "artifact_fix": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\artifact_fix_dataset.jsonl",
+        "missing_map_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\missing_map_generation_dataset.jsonl",
+        "texture_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\texture_generation_dataset.jsonl"
+      },
+      "summary_path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\05_DATASETS\\dataset_summary.json"
+    },
+    "quality_gates": {
+      "status": "ok",
+      "errors": [],
+      "warnings": [
+        "_Tiles138_manifest.json: `identity.provider` missing",
+        "Tiles138_manifest.json: `identity.provider` missing"
+      ]
+    }
+  },
+  "status": "success"
+}

@@ -1,0 +1,29 @@
+{
+    "profiles": {
+        "metal": {
+            "roughness_mean_max": 185,
+            "albedo_mean_max": 220
+        },
+        "dielectric": {
+            "roughness_mean_min": 40,
+            "albedo_mean_min": 20
+        }
+    },
+    "map_rules": {
+        "roughness": {
+            "grayscale_required": true,
+            "brightness_min": 20,
+            "brightness_max": 240
+        },
+        "normal": {
+            "grayscale_forbidden": true,
+            "blue_channel_mean_min": 140
+        },
+        "metallic": {
+            "grayscale_required": true
+        },
+        "ao": {
+            "grayscale_required": true
+        }
+    }
+}

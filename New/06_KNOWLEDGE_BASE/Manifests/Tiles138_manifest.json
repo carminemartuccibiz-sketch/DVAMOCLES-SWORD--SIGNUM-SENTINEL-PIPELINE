@@ -1,0 +1,29 @@
+{
+    "schema_version": "1.0.0",
+    "identity": {
+        "material_name": "Tiles138",
+        "provider": "",
+        "url": "",
+        "technique": "Photogrammetry",
+        "import_date": "2026-04-25T22:26:40.479449"
+    },
+    "tags": [],
+    "description": "",
+    "hierarchy": {
+        "RAW": {
+            "custom": {
+                "files": []
+            },
+            "Tiles138_1K-PNG": {
+                "files": []
+            },
+            "Tiles138_2K-JPG": {
+                "files": []
+            },
+            "Tiles138_2K-PNG": {
+                "files": []
+            }
+        },
+        "CUSTOM": {}
+    }
+}

@@ -1,0 +1,58 @@
+{
+  "provider": "AmbientCG",
+  "asset_id": "Tiles138",
+  "title": "Tiles 138",
+  "downloads": [
+    {
+      "attributes": "1K-JPG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_1K-JPG.zip",
+      "size": 6112131
+    },
+    {
+      "attributes": "2K-JPG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_2K-JPG.zip",
+      "size": 22977168
+    },
+    {
+      "attributes": "4K-JPG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_4K-JPG.zip",
+      "size": 99203503
+    },
+    {
+      "attributes": "8K-JPG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_8K-JPG.zip",
+      "size": 431206782
+    },
+    {
+      "attributes": "1K-PNG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_1K-PNG.zip",
+      "size": 15255517
+    },
+    {
+      "attributes": "2K-PNG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_2K-PNG.zip",
+      "size": 59940975
+    },
+    {
+      "attributes": "4K-PNG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_4K-PNG.zip",
+      "size": 233465667
+    },
+    {
+      "attributes": "8K-PNG",
+      "extension": "zip",
+      "url": "https://ambientcg.com/get?file=Tiles138_8K-PNG.zip",
+      "size": 913508414
+    }
+  ],
+  "tags": [],
+  "data_type": "",
+  "description": ""
+}

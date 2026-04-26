@@ -1,0 +1,280 @@
+{
+    "identity": {
+        "material_name": "Tiles138",
+        "provider": "Ambientcg",
+        "url": "",
+        "technique": "Photogrammetry",
+        "import_date": "2026-04-24T00:19:42.842815"
+    },
+    "tags": [],
+    "description": "",
+    "hierarchy": {
+        "RAW": {
+            "Tiles138_1K-PNG": {
+                "files": [
+                    {
+                        "name": "Tiles138.png",
+                        "map_type": "THUBNAIL",
+                        "resolution": "UNKNOWN",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "512x512",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_AmbientOcclusion.png",
+                        "map_type": "AMBIENT_OCCLUSION",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_Color.png",
+                        "map_type": "ALBEDO",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_Displacement.png",
+                        "map_type": "HEIGHT",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_NormalDX.png",
+                        "map_type": "NORMAL",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_NormalGL.png",
+                        "map_type": "NORMAL",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_1K-PNG_Roughness.png",
+                        "map_type": "ROUGHNESS",
+                        "resolution": "1K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "1024x1024",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    }
+                ]
+            },
+            "Tiles138_2K-JPG": {
+                "files": [
+                    {
+                        "name": "Tiles138.png",
+                        "map_type": "THUBNAIL",
+                        "resolution": "UNKNOWN",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "512x512",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_AmbientOcclusion.jpg",
+                        "map_type": "AMBIENT_OCCLUSION",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_Color.jpg",
+                        "map_type": "ALBEDO",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_Displacement.jpg",
+                        "map_type": "HEIGHT",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_NormalDX.jpg",
+                        "map_type": "NORMAL",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_NormalGL.jpg",
+                        "map_type": "NORMAL",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-JPG_Roughness.jpg",
+                        "map_type": "ROUGHNESS",
+                        "resolution": "2K",
+                        "format": "JPG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "Unknown",
+                        "color_space": "Unknown"
+                    }
+                ]
+            },
+            "Tiles138_2K-PNG": {
+                "files": [
+                    {
+                        "name": "Tiles138.png",
+                        "map_type": "THUBNAIL",
+                        "resolution": "UNKNOWN",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "512x512",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_AmbientOcclusion.png",
+                        "map_type": "AMBIENT_OCCLUSION",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_Color.png",
+                        "map_type": "ALBEDO",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_Displacement.png",
+                        "map_type": "HEIGHT",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_NormalDX.png",
+                        "map_type": "NORMAL",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_NormalGL.png",
+                        "map_type": "NORMAL",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "16-bit",
+                        "color_space": "Unknown"
+                    },
+                    {
+                        "name": "Tiles138_2K-PNG_Roughness.png",
+                        "map_type": "ROUGHNESS",
+                        "resolution": "2K",
+                        "format": "PNG",
+                        "process": "",
+                        "derived_from": "",
+                        "normal_convention": "",
+                        "tech_res": "2048x2048",
+                        "bit_depth": "8-bit",
+                        "color_space": "Unknown"
+                    }
+                ]
+            }
+        },
+        "CUSTOM": {}
+    }
+}

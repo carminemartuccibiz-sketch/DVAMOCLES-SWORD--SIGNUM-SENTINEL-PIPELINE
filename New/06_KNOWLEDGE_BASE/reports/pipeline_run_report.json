@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "timestamp_utc": "2026-04-25T23:33:53.551665+00:00",
+  "stages": {
+    "import": {
+      "status": "skipped",
+      "reason": "skip_import"
+    },
+    "ingestion": {
+      "status": "success",
+      "processed": 0,
+      "errors": 0,
+      "manifests": [],
+      "quality_gates": {
+        "status": "ok",
+        "errors": [],
+        "warnings": [
+          "kb_index.json: `documents` is empty",
+          "_Tiles138_manifest.json: `identity.provider` missing",
+          "Tiles138_manifest.json: `identity.provider` missing"
+        ]
+      }
+    },
+    "analysis_benchmark": {
+      "status": "ok",
+      "materials_analyzed": 0,
+      "avg_pbr_completeness": 0.0,
+      "avg_generated_similarity": 0.0,
+      "map_type_scores": {},
+      "materials": [],
+      "output_path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\06_KNOWLEDGE_BASE\\reports\\analysis_benchmark_report.json"
+    },
+    "pid_mask_engine": {
+      "status": "ok",
+      "masks_generated": 0,
+      "variants": []
+    },
+    "correlation_engine": {
+      "status": "ok",
+      "appended": 0,
+      "path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\correlations.json"
+    },
+    "knowledge_processor": {
+      "status": "ok",
+      "count": 7,
+      "path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\06_KNOWLEDGE_BASE\\parsed\\source_summaries.json"
+    },
+    "dataset_builder": {
+      "status": "ok",
+      "total_variants": 0,
+      "providers": [],
+      "pbr_complete_variants": 0,
+      "segmented_variants": 0,
+      "coverage_ratio": 0.0,
+      "provider_distribution": {},
+      "imbalance_ratio": 0.0,
+      "exports": {
+        "cataloging": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\cataloging_dataset.jsonl",
+        "super_resolution": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\super_resolution_dataset.jsonl",
+        "artifact_fix": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\artifact_fix_dataset.jsonl",
+        "missing_map_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\missing_map_generation_dataset.jsonl",
+        "texture_generation": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\texture_generation_dataset.jsonl"
+      },
+      "summary_path": "C:\\Users\\Carmine\\Desktop\\DVAMOCLES SWORD- SIGNUM SENTINEL PIPELINE\\New\\04_DATASET\\dataset_summary.json"
+    },
+    "quality_gates": {
+      "status": "ok",
+      "errors": [],
+      "warnings": [
+        "kb_index.json: `documents` is empty",
+        "_Tiles138_manifest.json: `identity.provider` missing",
+        "Tiles138_manifest.json: `identity.provider` missing"
+      ]
+    }
+  },
+  "status": "success"
+}

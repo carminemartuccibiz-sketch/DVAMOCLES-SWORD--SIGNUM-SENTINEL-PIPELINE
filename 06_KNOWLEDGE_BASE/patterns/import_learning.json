@@ -1,0 +1,28 @@
+{
+    "providers": {
+        "MockProvider": {
+            "materials": 3
+        },
+        "": {
+            "materials": 2
+        }
+    },
+    "variant_patterns": {
+        "4K_PNG": 3,
+        "Tiles138_1K-PNG": 2,
+        "Tiles138_2K-JPG": 2,
+        "Tiles138_2K-PNG": 2,
+        "custom": 1
+    },
+    "map_suffixes": {
+        "albedo": {
+            "albedo": 3
+        },
+        "normal_gl": {
+            "gl": 3
+        },
+        "roughness": {
+            "roughness": 3
+        }
+    }
+}

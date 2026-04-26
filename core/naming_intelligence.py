@@ -20,6 +20,7 @@ class NamingIntelligence:
         self.kb_path = Path(kb_path)
         self.map_patterns: Dict[str, List[str]] = {}
         self.role_aliases: Dict[str, str] = {}
+        self.normal_conventions: Dict[str, List[str]] = {}
         self._load_kb()
 
     def _load_kb(self):
@@ -31,6 +32,7 @@ class NamingIntelligence:
             data = json.load(f)
         self.map_patterns = data.get("map_patterns", {})
         self.role_aliases = data.get("role_aliases", {})
+        self.normal_conventions = data.get("normal_convention_patterns", {})
 
     def reload_kb(self):
         """Ricarica la KB da disco (es. dopo aggiornamento da MTLX / UniversalParser)."""
@@ -63,12 +65,26 @@ class NamingIntelligence:
 
         convention = None
         if best_match == "normal":
-            if re.search(r"normal[_\- ]?dx|_ndx|directx", clean):
-                convention = "DX"
-            elif re.search(r"normal[_\- ]?gl|_ngl|opengl", clean):
-                convention = "GL"
+            convention = self._detect_normal_convention(clean, tokens)
         return NamingResult(map_type=best_match, confidence=best_conf, source=source, convention=convention)
 
     def remap_role(self, role_name: str) -> str:
         role = (role_name or "").strip().lower()
         return self.role_aliases.get(role, "unknown")
+
+    def _detect_normal_convention(self, clean_name: str, tokens: List[str]) -> str | None:
+        token_set = set(tokens)
+        dx_patterns = [str(p).lower().strip("_") for p in self.normal_conventions.get("dx", [])]
+        gl_patterns = [str(p).lower().strip("_") for p in self.normal_conventions.get("gl", [])]
+
+        for pattern in dx_patterns:
+            if not pattern:
+                continue
+            if pattern in token_set or pattern in clean_name:
+                return "DX"
+        for pattern in gl_patterns:
+            if not pattern:
+                continue
+            if pattern in token_set or pattern in clean_name:
+                return "GL"
+        return None

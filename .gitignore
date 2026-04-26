@@ -13,3 +13,24 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+.cursor/
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.toc
+*.pkg
+*.pyz
+*.exe
+
+# Runtime/generated config
+config/gui_state.json
+temp/
+
+# Python bytecode artifacts
+**/__pycache__/
+*.pyc
+
+# Temporary user scratch docs
+Z_DEV/contesto e co ai/Documento senza titolo*.docx

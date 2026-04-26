@@ -7,6 +7,7 @@ from typing import Dict, Any, List
 
 from core.metadata_extractor import MetadataExtractor
 from core.naming_intelligence import NamingIntelligence
+from core.quality_gates import KnowledgeBaseQualityGates
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("SIGNUM_SENTINEL.INGESTOR")
@@ -17,15 +18,16 @@ class Ingestor:
 
     VALID_TEXTURE_EXT = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".exr", ".tga"}
     VALID_AUX_EXT = {".mtlx", ".tres", ".usdc", ".blend", ".uasset", ".json"}
+    SCHEMA_VERSION = "1.0.0"
 
     def __init__(self, root_dir: str | None = None):
-        self.root = Path(root_dir) if root_dir else Path(__file__).parent.parent
+        self.root = Path(root_dir).resolve() if root_dir else Path(__file__).parent.parent.resolve()
         self.raw_dir = self.root / "01_RAW_ARCHIVE"
         self.custom_dir = self.root / "02_CUSTOM"
         self.processed_dir = self.root / "03_PROCESSED"
         self.processed_dir.mkdir(parents=True, exist_ok=True)
-        self.naming = NamingIntelligence()
-        self.metadata = MetadataExtractor()
+        self.naming = NamingIntelligence(str(self.root / "06_KNOWLEDGE_BASE" / "mappings" / "naming_map.json"))
+        self.metadata = MetadataExtractor(self.root)
 
     def run_full_ingestion(self) -> Dict[str, Any]:
         logger.info("Start ingestion RAW + CUSTOM")
@@ -36,10 +38,10 @@ class Ingestor:
         for source_root, source_label in ((self.raw_dir, "RAW"), (self.custom_dir, "CUSTOM")):
             if not source_root.exists():
                 continue
-            for provider_dir in source_root.iterdir():
+            for provider_dir in sorted(source_root.iterdir(), key=lambda p: p.name.lower()):
                 if not provider_dir.is_dir():
                     continue
-                for material_dir in provider_dir.iterdir():
+                for material_dir in sorted(provider_dir.iterdir(), key=lambda p: p.name.lower()):
                     if not material_dir.is_dir():
                         continue
                     try:
@@ -51,8 +53,18 @@ class Ingestor:
                         errors += 1
                         logger.exception("Ingest failed: %s/%s", provider_dir.name, material_dir.name)
 
+        gates_report = KnowledgeBaseQualityGates(self.root).run()
+        if gates_report["status"] != "ok":
+            errors += len(gates_report.get("errors", []))
+            logger.error("KB quality gates failed: %s", gates_report.get("errors", []))
         logger.info("Ingestion done. materials=%s errors=%s", total, errors)
-        return {"status": "success" if errors == 0 else "partial_success", "processed": total, "errors": errors, "manifests": manifests}
+        return {
+            "status": "success" if errors == 0 else "partial_success",
+            "processed": total,
+            "errors": errors,
+            "manifests": manifests,
+            "quality_gates": gates_report,
+        }
 
     def _ingest_material(self, provider: str, material_dir: Path, source_label: str) -> str | None:
         material_info = self._read_json(material_dir / "material_info.json")
@@ -107,7 +119,9 @@ class Ingestor:
                 "files": payload_files,
             }
 
+        flattened_files = [item for var in variants_payload.values() for item in var.get("files", [])]
         manifest = {
+            "schema_version": self.SCHEMA_VERSION,
             "metadata": {
                 "material_name": material_name,
                 "provider": provider,
@@ -123,6 +137,7 @@ class Ingestor:
             },
             "derivation": process_info if process_info else {"is_raw": source_label == "RAW"},
             "variants": variants_payload,
+            "files": flattened_files,
             "stats": {"variant_count": len(variants_payload), "file_count": total_files},
         }
 
@@ -139,15 +154,15 @@ class Ingestor:
         - struttura flat (deduce da filename)
         """
         variants: Dict[str, List[Path]] = {}
-        for child in material_dir.iterdir():
+        for child in sorted(material_dir.iterdir(), key=lambda p: p.name.lower()):
             if child.is_dir():
                 key = self._variant_name_from_folder(child.name)
-                textures = [f for f in child.iterdir() if f.is_file() and f.suffix.lower() in self.VALID_TEXTURE_EXT]
+                textures = [f for f in sorted(child.iterdir(), key=lambda p: p.name.lower()) if f.is_file() and f.suffix.lower() in self.VALID_TEXTURE_EXT]
                 if textures:
                     variants.setdefault(key, []).extend(sorted(textures))
 
         if not variants:
-            for f in material_dir.iterdir():
+            for f in sorted(material_dir.iterdir(), key=lambda p: p.name.lower()):
                 if not f.is_file() or f.suffix.lower() not in self.VALID_TEXTURE_EXT:
                     continue
                 key = self._variant_name_from_filename(f.name)

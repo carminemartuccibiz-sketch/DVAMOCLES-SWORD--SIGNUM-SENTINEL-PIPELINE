@@ -1,0 +1,31 @@
+{
+    "schema_version": "1.0.0",
+    "identity": {
+        "material_name": "Tiles138",
+        "provider": "",
+        "asset_type": "RAW",
+        "source": "GUI_IMPORT",
+        "url": "",
+        "technique": "Photogrammetry"
+    },
+    "description": "",
+    "tags": [],
+    "variants": {
+        "custom": {
+            "file_count": 0,
+            "files": []
+        },
+        "Tiles138_1K-PNG": {
+            "file_count": 0,
+            "files": []
+        },
+        "Tiles138_2K-JPG": {
+            "file_count": 0,
+            "files": []
+        },
+        "Tiles138_2K-PNG": {
+            "file_count": 0,
+            "files": []
+        }
+    }
+}
