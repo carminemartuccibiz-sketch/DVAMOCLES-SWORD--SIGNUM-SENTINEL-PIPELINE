@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0.0",
+  "raw_readonly": true,
+  "dataset_output_dir": "04_DATASET",
+  "correlations_append_only": true,
+  "generator_supports_packed_schemes": ["ORM", "ARM", "RMA"]
+}

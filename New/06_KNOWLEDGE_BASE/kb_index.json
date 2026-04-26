@@ -1,0 +1,5 @@
+{
+  "version": "1.0",
+  "generated_note": "Minimal stub after greenfield migration. Regenerate with core.knowledge_ingestor.KnowledgeIngestor.ingest_files(...).",
+  "documents": []
+}

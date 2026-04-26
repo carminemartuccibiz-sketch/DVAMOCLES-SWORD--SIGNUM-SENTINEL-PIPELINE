@@ -1,0 +1,10 @@
+{
+  "gpu_memory_fraction": 0.5,
+  "max_parallel_jobs": 2,
+  "max_texture_resolution_ai": 2048,
+  "ollama_model": "mistral",
+  "ollama_host": "http://127.0.0.1:11434",
+  "ollama_auto_stop": true,
+  "blip_auto_unload_after_n_images": 20,
+  "exiftool_batch_size": 50
+}
